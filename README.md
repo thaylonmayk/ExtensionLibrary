@@ -1,18 +1,120 @@
 # UtilExtensions
 
-Bem-vindo ao UtilExtensions! Esta biblioteca fornece uma variedade de mÈtodos de extens„o para `Int32`, `double`, `decimal` , `strings` e `enum`, facilitando a manipulaÁ„o e c·lculos comuns em suas aplicaÁıes .NET.
+Bem-vindo ao UtilExtensions! Esta biblioteca fornece uma variedade de m√©todos de extens√£o para `Int32`, `double`, `decimal`, `strings` e `enum`, facilitando a manipula√ß√£o e c√°lculos comuns em suas aplica√ß√µes .NET. Com UtilExtensions, voc√™ pode manipular strings, realizar c√°lculos num√©ricos e trabalhar com enums de maneira eficiente e eficaz.
 
 ## Funcionalidades
 
-- **Int32 Extensions**: MÈtodos para verificar n˙meros primos, pares, Ìmpares, calcular fatorial, MMC, etc.
-- **Double Extensions**: MÈtodos para conversıes, c·lculos percentuais, e mÈdias ponderadas.
-- **Decimal Extensions**: MÈtodos semelhantes aos do `double`, mas especificamente para `decimal`.
-- **String Extensions**: MÈtodos para manipulaÁ„o de strings.
+- **Int32 Extensions**: M√©todos para verificar n√∫meros primos, pares, √≠mpares, calcular fatorial, MMC, etc.
+- **Double Extensions**: M√©todos para convers√µes, c√°lculos percentuais, e m√©dias ponderadas.
+- **Decimal Extensions**: M√©todos semelhantes aos do `double`, mas especificamente para `decimal`.
+- **String Extensions**: M√©todos para manipula√ß√£o de strings, como invers√£o, remo√ß√£o de espa√ßos em branco, e verifica√ß√µes de padr√£o.
+- **Enum Extensions**: M√©todos para converter enums em dicion√°rios, recuperar todos os valores e nomes, e realizar v√°rias outras opera√ß√µes avan√ßadas.
 
-- 
-## InstalaÁ„o
+## Instala√ß√£o
 
 Para instalar a biblioteca UtilExtensions via NuGet, use o seguinte comando:
 
 ```sh
-dotnet add package UtilExtensions
+dotnet add package TL.StringExtensionsLibrary
+dotnet add package TL.EnumExtensionsLibrary
+dotnet add package TL.NumericExtensionsLibrary
+```
+
+## Exemplos de Uso
+
+**NumericExtensionsLibrary** 
+```
+using NumericExtensionsLibrary;
+
+class Program
+{
+    static void Main()
+    {
+        //Int32 Extensions
+        int number = 150;
+        Console.WriteLine($"IsPrime: {number.IsPrime()}");
+        Console.WriteLine($"IsEven: {number.IsEven()}");
+        Console.WriteLine($"Factorial: {number.Factorial()}");
+        //Double Extensions
+        double baseNumber = 150.75;
+        double percent = 20.0;
+        Console.WriteLine($"{percent}% de {baseNumber} √© {baseNumber.Percentage(percent)}"
+
+        //Decimal Extensions
+        decimal numberDecimal = 150.75M;
+        decimal percentDecimal= 20.0M;
+        Console.WriteLine($"{percentDecimal}% de {numberDecimal} √© {numberDecimal.Percentage(percent)}"
+    }
+}
+
+```
+
+**StringExtensionLibrary**
+```
+using StringExtensionLibrary;
+
+class Program
+{
+    static void Main()
+    {
+
+      public string? Summary { get; set; }
+      public string? BooleanEquivalent { get; set; }
+
+       BooleanEquivalent = "false";
+       var teste1 = BooleanEquivalent.ToBoolean();
+       Console.WriteLine(teste1);
+       BooleanEquivalent = "true";
+       teste1 = BooleanEquivalent.ToBoolean();
+       Console.WriteLine(teste1);
+       BooleanEquivalent = "yes";
+       teste1 = BooleanEquivalent.ToBoolean();
+       Console.WriteLine(teste1);
+       BooleanEquivalent = "no";
+       teste1 = BooleanEquivalent.ToBoolean();
+       Console.WriteLine(teste1);
+       BooleanEquivalent = "y";
+       teste1 = BooleanEquivalent.ToBoolean(); 
+       Console.WriteLine(teste1);
+       BooleanEquivalent = "n";
+       teste1 = BooleanEquivalent.ToBoolean(); 
+       Console.WriteLine(teste1);
+
+
+
+        BooleanEquivalent = DateTime.UtcNow.Date.ToString();
+        teste1 = BooleanEquivalent.IsDateTime("dd/MM/yyyy");
+        Console.WriteLine(teste1);
+
+
+        teste1 = Summary.IsNullOrEmpty();
+        Console.WriteLine(teste1);
+    }
+}
+
+```
+
+**EnumExtensionsLibrary**
+```
+using EnumExtensionsLibrary;
+public enum Priority
+{
+    Urgent,
+    High,
+    Medium,
+    Low
+}
+class Program
+{
+    static void Main()
+    {
+       var dictionary = Priority.Urgent.ToDictionary();
+        Console.WriteLine("Dicion√°rio do enum Priority:");
+        foreach (var item in dictionary)
+        {
+            Console.WriteLine($"{item.Key}: {item.Value}");
+        }
+    }
+}
+
+```

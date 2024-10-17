@@ -45,3 +45,11 @@ dotnet add package TL.NumericExtensionsLibrary
 - `DigitSum()`: Calcula a soma dos dígitos de um número.
 - `ReverseDigits()`: Inverte os dígitos de um número.
 - `Subtract(decimal subtrahend)`: Subtrai um número de outro.
+
+ ```          
+
+## Contribuição
+Sinta-se à vontade para contribuir com este projeto! Por favor, abra um pull request ou envie issues para sugestões e melhorias.
+
+## Licença
+Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para detalhes.

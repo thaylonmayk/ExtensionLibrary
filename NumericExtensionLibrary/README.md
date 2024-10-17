@@ -2,6 +2,15 @@
 
 Uma biblioteca .NET para fornecer métodos de extensão úteis para `int`, `double` e `decimal`.
 
+
+## Instalação
+
+Você pode instalar a biblioteca via NuGet. No seu terminal, execute:
+
+```bash
+dotnet add package TL.NumericExtensionsLibrary
+```
+
 ## Funcionalidades
 
 ### Extensões para `int`
@@ -36,10 +45,3 @@ Uma biblioteca .NET para fornecer métodos de extensão úteis para `int`, `doub
 - `DigitSum()`: Calcula a soma dos dígitos de um número.
 - `ReverseDigits()`: Inverte os dígitos de um número.
 - `Subtract(decimal subtrahend)`: Subtrai um número de outro.
-
-## Instalação
-
-Você pode instalar a biblioteca via NuGet. No seu terminal, execute:
-
-```bash
-dotnet add package NumericExtensionsLibrary

@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyExtensionLibrary", "AssemblyExtensionLibrary\AssemblyExtensionLibrary.csproj", "{5E243738-0593-4B4B-B741-1C25F64AF16D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E243738-0593-4B4B-B741-1C25F64AF16D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E243738-0593-4B4B-B741-1C25F64AF16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E243738-0593-4B4B-B741-1C25F64AF16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E243738-0593-4B4B-B741-1C25F64AF16D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

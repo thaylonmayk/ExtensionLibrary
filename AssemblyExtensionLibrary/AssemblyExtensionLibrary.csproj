@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <PackageId>TL.AssemblyExtensionLibrary</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Thaylon Lopes</Authors>
+    <Description>Projeto de extensão para numeros</Description>
+    <Title>AssemblyExtensionLibrary</Title>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/thaylonmayk/ExtensionsLibrary</PackageProjectUrl>
+  </PropertyGroup>
+
+
+</Project>

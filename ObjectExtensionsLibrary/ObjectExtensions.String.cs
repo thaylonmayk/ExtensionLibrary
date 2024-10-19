@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
-using System.Text.Json.Serialization;
 using System.Text.Json;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ObjectExtensionsLibrary
 {

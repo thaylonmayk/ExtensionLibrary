@@ -3,7 +3,7 @@
 namespace DateTimeExtensionsLibrary
 {
     public static partial class DateTimeExtensions
-    { 
+    {
         /// <summary>
         /// Checks if the DateTime is a weekend.
         /// </summary>

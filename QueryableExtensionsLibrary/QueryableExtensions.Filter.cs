@@ -14,7 +14,7 @@ namespace QueryableExtensionsLibrary
         /// <param name="property">The property to filter on.</param>
         /// <param name="value">The value to filter by.</param>
         /// <returns>A filtered IQueryable sequence.</returns>
-        public static IQueryable<T> Filter<T>(this IQueryable<T> queryable, string property, object value) => 
+        public static IQueryable<T> Filter<T>(this IQueryable<T> queryable, string property, object value) =>
             queryable.Filter(property, string.Empty, value);
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace QueryableExtensionsLibrary
         /// <param name="index">The page index (starting from 1).</param>
         /// <param name="size">The size of each page.</param>
         /// <returns>A paginated IQueryable sequence.</returns>
-        public static IQueryable<T> Page<T>(this IQueryable<T> queryable, int index, int size) => 
+        public static IQueryable<T> Page<T>(this IQueryable<T> queryable, int index, int size) =>
             queryable is null || index <= 0 || size <= 0 ? queryable : queryable.Skip((index - 1) * size).Take(size);
 
         /// <summary>

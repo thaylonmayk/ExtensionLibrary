@@ -6,19 +6,10 @@ Este projeto fornece várias extensões úteis para a classe `object` no .NET, f
 
 ## Instalação
 
+Você pode instalar a biblioteca via NuGet. No seu terminal, execute:
+
 ```bash
-# Clone o repositório
-git clone <URL_DO_REPOSITORIO>
-
-# Navegue até o diretório do projeto
-cd ObjectExtensions
-
-# Restaure os pacotes NuGet
-dotnet restore
-
-# Compile o projeto
-dotnet build
-
+dotnet add package TL.ObjectExtensionsLibrary
 ```
 
 ## Funcionalidades

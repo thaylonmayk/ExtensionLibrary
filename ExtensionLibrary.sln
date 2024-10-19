@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectExtensionsLibrary", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryableExtensionsLibrary", "QueryableExtensionsLibrary\QueryableExtensionsLibrary.csproj", "{D57B2F28-D676-49D0-92C3-A17DCE28A9E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaimsPrincipalExtensionsLibrary", "ClaimsPrincipalExtensionsLibrary\ClaimsPrincipalExtensionsLibrary.csproj", "{3ACEFC93-9311-490F-ABB5-E23267037D53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{F7A48A14-B153-4A5F-88BB-0F6AA484C992}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7A48A14-B153-4A5F-88BB-0F6AA484C992}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7A48A14-B153-4A5F-88BB-0F6AA484C992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

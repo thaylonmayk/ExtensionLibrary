@@ -3,16 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringExtensionLibrary", "StringExtensionLibrary\StringExtensionLibrary.csproj", "{FB4BB7AC-D844-418A-8E24-9E43E8428C3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StringExtensionLibrary", "StringExtensionLibrary\StringExtensionLibrary.csproj", "{FB4BB7AC-D844-418A-8E24-9E43E8428C3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumExtensionsLibrary", "EnumExtensionsLibrary\EnumExtensionsLibrary.csproj", "{45EFEC83-B1B9-4364-A39C-9C4DBCA1E20B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnumExtensionsLibrary", "EnumExtensionsLibrary\EnumExtensionsLibrary.csproj", "{45EFEC83-B1B9-4364-A39C-9C4DBCA1E20B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumericExtensionLibrary", "NumericExtensionLibrary\NumericExtensionLibrary.csproj", "{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NumericExtensionLibrary", "NumericExtensionLibrary\NumericExtensionLibrary.csproj", "{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{71A84B03-3A54-4C62-8028-E63284E46C6F}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DateTimeExtensionsLibrary", "DateTimeExtensionsLibrary\DateTimeExtensionsLibrary.csproj", "{071203FC-75A0-4501-82BF-4B2255BC7C19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectExtensionsLibrary", "ObjectExtensionsLibrary\ObjectExtensionsLibrary.csproj", "{F7A48A14-B153-4A5F-88BB-0F6AA484C992}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryableExtensionsLibrary", "QueryableExtensionsLibrary\QueryableExtensionsLibrary.csproj", "{D57B2F28-D676-49D0-92C3-A17DCE28A9E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaimsPrincipalExtensionsLibrary", "ClaimsPrincipalExtensionsLibrary\ClaimsPrincipalExtensionsLibrary.csproj", "{3ACEFC93-9311-490F-ABB5-E23267037D53}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyExtensionLibrary", "AssemblyExtensionLibrary\AssemblyExtensionLibrary.csproj", "{5E243738-0593-4B4B-B741-1C25F64AF16D}"
 EndProject
@@ -34,6 +42,22 @@ Global
 		{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED88AD31-5AD1-47AC-8D73-BCCC76D8783D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{071203FC-75A0-4501-82BF-4B2255BC7C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{071203FC-75A0-4501-82BF-4B2255BC7C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{071203FC-75A0-4501-82BF-4B2255BC7C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{071203FC-75A0-4501-82BF-4B2255BC7C19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D57B2F28-D676-49D0-92C3-A17DCE28A9E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D57B2F28-D676-49D0-92C3-A17DCE28A9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D57B2F28-D676-49D0-92C3-A17DCE28A9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D57B2F28-D676-49D0-92C3-A17DCE28A9E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A48A14-B153-4A5F-88BB-0F6AA484C992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A48A14-B153-4A5F-88BB-0F6AA484C992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A48A14-B153-4A5F-88BB-0F6AA484C992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A48A14-B153-4A5F-88BB-0F6AA484C992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ACEFC93-9311-490F-ABB5-E23267037D53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E243738-0593-4B4B-B741-1C25F64AF16D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5E243738-0593-4B4B-B741-1C25F64AF16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E243738-0593-4B4B-B741-1C25F64AF16D}.Release|Any CPU.ActiveCfg = Release|Any CPU

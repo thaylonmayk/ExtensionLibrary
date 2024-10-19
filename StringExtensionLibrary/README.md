@@ -47,3 +47,11 @@ Once you have installed the String extension library within your project. String
 
             teste1 = Summary.IsNullOrEmpty();
             Console.WriteLine(teste1);
+
+ ```          
+
+## Contribuição
+Sinta-se à vontade para contribuir com este projeto! Por favor, abra um pull request ou envie issues para sugestões e melhorias.
+
+## Licença
+Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para detalhes.

@@ -120,12 +120,6 @@ var first = data.FirstOrDefault(x => x.Name == "John");
 
 ```
 
-### Filter
-
-```csharp
-public static IQueryable<T> Filter<T>(this IQueryable<T> queryable, string property, object value)
-public static IQueryable<T> Filter<T>(this IQueryable<T> queryable, string property, string comparison, object value)
-
 ## Contribuições
 Sinta-se à vontade para contribuir com este projeto. Faça um fork, crie uma branch com suas melhorias e abra um pull request!
 

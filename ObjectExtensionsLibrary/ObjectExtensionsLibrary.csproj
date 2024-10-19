@@ -2,11 +2,11 @@
   <PropertyGroup>
     <TargetFrameworks>net5.0;net6.0;net8.0</TargetFrameworks>
     <Nullable>disable</Nullable>
-    <PackageId>TL.QueryableExtensionsLibrary</PackageId>
+    <PackageId>TL.ObjectExtensionsLibrary</PackageId>
     <Version>0.0.1</Version>
     <Authors>Thaylon Lopes</Authors>
-    <Description>Projeto de extensão para IQueryable</Description>
-    <Title>QueryableExtensionsLibrary</Title>
+    <Description>Projeto de extensão para objetos</Description>
+    <Title>ObjectExtensionsLibrary</Title>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/thaylonmayk/ExtensionsLibrary</PackageProjectUrl>
   </PropertyGroup>

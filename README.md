@@ -2,14 +2,15 @@
 
 Bem-vindo ao UtilExtensions! Esta biblioteca fornece uma variedade de métodos de extensão para `Int32`, `double`, `decimal`, `strings` e `enum`, facilitando a manipulação e cálculos comuns em suas aplicações .NET. Com UtilExtensions, você pode manipular strings, realizar cálculos numéricos e trabalhar com enums de maneira eficiente e eficaz.
 
-## Funcionalidades
-
-- **Int32 Extensions**: Métodos para verificar números primos, pares, ímpares, calcular fatorial, MMC, etc.
-- **Double Extensions**: Métodos para conversões, cálculos percentuais, e médias ponderadas.
-- **Decimal Extensions**: Métodos semelhantes aos do `double`, mas especificamente para `decimal`.
-- **String Extensions**: Métodos para manipulação de strings, como inversão, remoção de espaços em branco, e verificações de padrão.
-- **Enum Extensions**: Métodos para converter enums em dicionários, recuperar todos os valores e nomes, e realizar várias outras operações avançadas.
-
+- **[StringExtensionsLibrary](./StringExtensionsLibrary/README.md)**: Métodos de extensão para strings.
+- **[EnumExtensionsLibrary](./EnumExtensionsLibrary/README.md)**: Métodos de extensão para enums.
+- **[NumericExtensionsLibrary](./NumericExtensionsLibrary/README.md)**: Métodos de extensão para tipos numéricos.
+- **[AssemblyExtensionsLibrary](./AssemblyExtensionsLibrary/README.md)**: Métodos de extensão para a classe `Assembly`.
+- **[ClaimsPrincipalExtensions](./ClaimsPrincipalExtensions/README.md)**: Métodos de extensão para `ClaimsPrincipal`.
+- **[DateTimeExtensionsLibrary](./DateTimeExtensionsLibrary/README.md)**: Métodos de extensão para `DateTime`.
+- **[ObjectExtensionsLibrary](./ObjectExtensionsLibrary/README.md)**: Métodos de extensão para objetos.
+- **[QueryableExtensionsLibrary](./QueryableExtensionsLibrary/README.md)**: Métodos de extensão para `IQueryable`
+- 
 ## Instalação
 
 Para instalar a biblioteca UtilExtensions via NuGet, use o seguinte comando:
@@ -18,6 +19,11 @@ Para instalar a biblioteca UtilExtensions via NuGet, use o seguinte comando:
 dotnet add package TL.StringExtensionsLibrary
 dotnet add package TL.EnumExtensionsLibrary
 dotnet add package TL.NumericExtensionsLibrary
+dotnet add package TL.AssemblyExtensionsLibrary
+dotnet add package TL.ClaimsPrincipalExtensions
+dotnet add package TL.DateTimeExtensionsLibrary
+dotnet add package TL.ObjectExtensionsLibrary
+dotnet add package TL.QueryableExtensionsLibrary
 ```
 
 ## Exemplos de Uso

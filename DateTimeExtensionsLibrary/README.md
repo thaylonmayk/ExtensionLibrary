@@ -1,4 +1,4 @@
-﻿# DateTimeExtensions Library
+﻿# DateTimeExtensionsLibrary
 
 A biblioteca DateTimeExtensions fornece uma variedade de métodos de extensão para a classe `DateTime` do .NET, facilitando a manipulação e formatação de datas e horários. Com DateTimeExtensions, você pode calcular dias úteis, obter representações amigáveis de datas, dividir intervalos de tempo em partes menores, e muito mais.
 

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;net6.0;net8.0</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <PackageId>TL.ClaimsPrincipalExtensionsLibrary</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Thaylon Lopes</Authors>
+    <Description>Projeto de extensão para ClaimsPrincipal</Description>
+    <Title>ClaimsPrincipalExtensionsLibrary</Title>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/thaylonmayk/ExtensionsLibrary</PackageProjectUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+</Project>

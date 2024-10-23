@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyExtensionLibrary", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClientExtensionsLibrary", "HttpClientExtensionsLibrary\HttpClientExtensionsLibrary.csproj", "{6A3B1C82-7D4B-426A-AFD7-63F60D62B677}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionExtensionsLibrary", "CollectionExtensionsLibrary\CollectionExtensionsLibrary.csproj", "{6AEA46AF-5A3A-4D43-8655-4556A1196DE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{6A3B1C82-7D4B-426A-AFD7-63F60D62B677}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A3B1C82-7D4B-426A-AFD7-63F60D62B677}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A3B1C82-7D4B-426A-AFD7-63F60D62B677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AEA46AF-5A3A-4D43-8655-4556A1196DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AEA46AF-5A3A-4D43-8655-4556A1196DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AEA46AF-5A3A-4D43-8655-4556A1196DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AEA46AF-5A3A-4D43-8655-4556A1196DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

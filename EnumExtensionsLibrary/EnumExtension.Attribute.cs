@@ -46,6 +46,18 @@ namespace EnumExtensionsLibrary
             return (T)Enum.Parse(typeof(T), value);
         }
 
+        /// <summary>
+        /// Tries to parse the string representation of the name or numeric value of one or more enumerated constants.
+        /// </summary>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="value">The string representation to parse.</param>
+        /// <param name="result">When this method returns, contains the enum value equivalent to the value contained in the string, if the parse operation succeeded.</param>
+        /// <returns>True if the string was converted successfully; otherwise, false.</returns>
+        public static bool TryParse<T>(string value, out T result) where T : struct, Enum
+        {
+            return Enum.TryParse(value, out result);
+        }
+
 
         /// <summary>
         /// Checks if a specific flag is set in a flagged enum.
@@ -95,6 +107,89 @@ namespace EnumExtensionsLibrary
             var member = value.GetType().GetMember(value.ToString());
             var attributes = member[0].GetCustomAttributes(typeof(T), false);
             return (T)attributes[0];
+        }
+
+        /// <summary>
+        /// Gets the description of an enum value.
+        /// </summary>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="enumValue">The enum value.</param>
+        /// <returns>The description of the enum value.</returns>
+        public static string GetDescriptionKeyValue<T>(this T enumValue) where T : Enum
+        {
+            var field = enumValue.GetType().GetField(enumValue.ToString());
+            var attribute = field.GetCustomAttributes(typeof(EnumDescriptionAttribute), false)
+                                 .Cast<EnumDescriptionAttribute>()
+                                 .FirstOrDefault();
+            return attribute?.Description ?? enumValue.ToString();
+        }
+        /// <summary>
+        /// Gets the description of an enum value based on a key.
+        /// </summary>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="enumValue">The enum value.</param>
+        /// <param name="key">The key to search for.</param>
+        /// <returns>The description of the enum value that matches the key.</returns>
+        public static string GetDescription<T>(this T enumValue, int key) where T : Enum
+        {
+            var field = enumValue.GetType().GetField(enumValue.ToString());
+            var attributes = field.GetCustomAttributes(typeof(EnumDescriptionAttribute), false)
+                                  .Cast<EnumDescriptionAttribute>();
+
+            var attribute = attributes.FirstOrDefault(a => a.Key == key);
+            return attribute?.Description ?? enumValue.ToString();
+        }
+
+        /// <summary>
+        /// Gets the enum value from its description.
+        /// </summary>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="description">The description of the enum value.</param>
+        /// <returns>The enum value that matches the description.</returns>
+        public static T GetEnumByDescription<T>(string description) where T : Enum
+        {
+            foreach (var value in Enum.GetValues(typeof(T)).Cast<T>())
+            {
+                if (value.GetDescription() == description)
+                {
+                    return value;
+                }
+            }
+            throw new ArgumentException("No enum value found for the given description.");
+        }
+
+        /// <summary>
+        /// Gets the description of an enum value based on a key or returns a default value if the key is not found.
+        /// </summary>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="enumValue">The enum value.</param>
+        /// <param name="key">The key to search for.</param>
+        /// <param name="defaultValue">The default value to return if the key is not found.</param>
+        /// <returns>The description of the enum value that matches the key or the default value.</returns>
+        public static string GetDescriptionByKeyOrDefault<T>(this T enumValue, int key, string defaultValue) where T : Enum
+        {
+            var field = enumValue.GetType().GetField(enumValue.ToString());
+            var attributes = field.GetCustomAttributes(typeof(EnumDescriptionAttribute), false)
+                                  .Cast<EnumDescriptionAttribute>();
+
+            var attribute = attributes.FirstOrDefault(a => a.Key == key);
+            return attribute?.Description ?? defaultValue;
+        }
+
+        /// <summary>
+        /// Determines if an enum value has a specific key associated with it.
+        /// </summary>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="enumValue">The enum value.</param>
+        /// <param name="key">The key to search for.</param>
+        /// <returns>True if the key is associated with the enum value; otherwise, false.</returns>
+        public static bool HasKey<T>(this T enumValue, int key) where T : Enum
+        {
+            var field = enumValue.GetType().GetField(enumValue.ToString());
+            var attributes = field.GetCustomAttributes(typeof(EnumDescriptionAttribute), false)
+                                  .Cast<EnumDescriptionAttribute>();
+
+            return attributes.Any(a => a.Key == key);
         }
 
 

@@ -1,4 +1,6 @@
-﻿namespace CollectionExtensionsLibrary
+﻿using System.Collections.Generic;
+
+namespace CollectionExtensionsLibrary
 {
     public static partial class CollectionExtensions
     {

@@ -3,7 +3,7 @@
     <TargetFrameworks>netstandard2.0;net5.0;net6.0;net8.0</TargetFrameworks>
     <Nullable>disable</Nullable>
     <PackageId>TL.EnumExtensionsLibrary</PackageId>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Authors>Thaylon Lopes</Authors>
     <Description>Projeto de extensão para enum</Description>
     <Title>EnumExtensionsLibrary</Title>

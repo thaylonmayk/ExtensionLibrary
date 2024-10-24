@@ -57,6 +57,27 @@ Once you have installed the Enum extension library within your project. Enum ext
 
             Console.WriteLine(Priority.Parse<Priority>("Urgent"));
 
+
+            public enum EnvironmentType
+            {
+                [EnumDescription(0, "Development Environment")]
+                [EnumDescription(1, "Staging Environment")]
+                [EnumDescription(2, "Production Environment")]
+                Beta,
+
+                [EnumDescription(1, "Development Environment")]
+                [EnumDescription(2, "Staging Environment")]
+                [EnumDescription(3, "Production Environment")]
+                [EnumDescription(4, "Staging Environment")]
+                Release
+            }
+            
+            var environmentBeta = EnvironmentType.Beta;
+            var environmentRelease = EnvironmentType.Release;
+
+            Console.WriteLine(environmentBeta.GetDescription(0)); // Output: Development Environment
+            Console.WriteLine(environmentRelease.GetDescription(3)); // Output: Production Environment
+
 ```          
 
 ## Contribuição

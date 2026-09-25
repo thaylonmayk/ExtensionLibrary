@@ -93,4 +93,25 @@ public class QueryableExtensionTests
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             query.ToKeysetPagedList(x => x.Id, pageSize: -1));
     }
+
+    [Fact]
+    public void Order_ShouldSortAscendingAndDescendingDynamically()
+    {
+        var query = new List<Product>
+        {
+            new() { Id = 3, Name = "Monitor", Price = 800 },
+            new() { Id = 1, Name = "Notebook", Price = 3000 },
+            new() { Id = 2, Name = "Mouse", Price = 100 }
+        }.AsQueryable();
+
+        var ascending = query.Order("Price", ascending: true).ToList();
+        Assert.Equal(100, ascending[0].Price);
+        Assert.Equal(800, ascending[1].Price);
+        Assert.Equal(3000, ascending[2].Price);
+
+        var descending = query.Order("Price", ascending: false).ToList();
+        Assert.Equal(3000, descending[0].Price);
+        Assert.Equal(800, descending[1].Price);
+        Assert.Equal(100, descending[2].Price);
+    }
 }

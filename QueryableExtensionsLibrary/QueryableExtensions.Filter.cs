@@ -1,11 +1,17 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace QueryableExtensionsLibrary
 {
     public static partial class QueryableExtensions
     {
+        private static readonly MethodInfo OrderByMethod = typeof(Queryable).GetMethods()
+            .First(m => m.Name == nameof(Queryable.OrderBy) && m.GetParameters().Length == 2);
+
+        private static readonly MethodInfo OrderByDescendingMethod = typeof(Queryable).GetMethods()
+            .First(m => m.Name == nameof(Queryable.OrderByDescending) && m.GetParameters().Length == 2);
         /// <summary>
         /// Filters the IQueryable sequence based on the specified property and value.
         /// </summary>
@@ -67,12 +73,13 @@ namespace QueryableExtensionsLibrary
             if (queryable is null || string.IsNullOrWhiteSpace(property)) return queryable;
 
             var parameter = Expression.Parameter(typeof(T));
-
             var body = Create(property, parameter);
+            var lambda = Expression.Lambda(body, parameter);
 
-            var expression = (dynamic)Expression.Lambda(body, parameter);
+            var methodDefinition = ascending ? OrderByMethod : OrderByDescendingMethod;
+            var genericMethod = methodDefinition.MakeGenericMethod(typeof(T), body.Type);
 
-            return ascending ? Queryable.OrderBy(queryable, expression) : Queryable.OrderByDescending(queryable, expression);
+            return (IQueryable<T>)genericMethod.Invoke(null, new object[] { queryable, lambda });
         }
 
         /// <summary>

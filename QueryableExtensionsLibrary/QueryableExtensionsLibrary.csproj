@@ -7,8 +7,4 @@
     <Description>Dynamic IQueryable extensions for EF Core: keyset pagination, string-based filtering, safe sorting, and conditional queries for clean APIs.</Description>
     <PackageTags>$(PackageTags);queryable;linq;dynamic-filter;keyset-pagination;sql;entity-framework;expression-trees</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.CSharp" />
-  </ItemGroup>
 </Project>

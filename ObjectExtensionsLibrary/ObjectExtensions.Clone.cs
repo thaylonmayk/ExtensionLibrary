@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 
 namespace ObjectExtensionsLibrary
 {
@@ -11,6 +11,11 @@ namespace ObjectExtensionsLibrary
         /// <returns>A deep copy of the object.</returns>
         public static T Clone<T>(this T obj)
         {
+            if (obj is null)
+            {
+                return default;
+            }
+
             var json = JsonSerializer.Serialize(obj);
             return JsonSerializer.Deserialize<T>(json);
         }

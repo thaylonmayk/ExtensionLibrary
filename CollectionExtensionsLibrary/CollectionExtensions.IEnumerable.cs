@@ -129,27 +129,7 @@ namespace CollectionExtensionsLibrary
             }
         }
 
-        /// <summary>
-        /// Randomizes the order of elements in the IEnumerable.
-        /// </summary>
-        /// <typeparam name="T">The type of elements in the IEnumerable.</typeparam>
-        /// <param name="source">The source IEnumerable.</param>
-        /// <returns>An IEnumerable with elements in random order.</returns>
-        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
-        {
-            if (source is null) throw new ArgumentNullException(nameof(source));
 
-            var buffer = source.ToArray();
-            var random = new Random();
-            for (int i = buffer.Length - 1; i > 0; i--)
-            {
-                int j = random.Next(i + 1);
-                var temp = buffer[i];
-                buffer[i] = buffer[j];
-                buffer[j] = temp;
-            }
-            return buffer;
-        }
 
         /// <summary>
         /// Paginates the IEnumerable into pages of a specified size.

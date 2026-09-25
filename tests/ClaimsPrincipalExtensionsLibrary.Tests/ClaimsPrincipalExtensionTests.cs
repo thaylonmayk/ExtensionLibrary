@@ -57,4 +57,28 @@ public class ClaimsPrincipalExtensionTests
         var principal = new ClaimsPrincipal(new ClaimsIdentity());
         Assert.Null(principal.ClaimSub());
     }
+
+    [Fact]
+    public void GetUserId_ShouldParseGuidAndIntAndLongAndString()
+    {
+        var expectedGuid = System.Guid.NewGuid();
+        var principalWithGuid = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", expectedGuid.ToString()) }));
+        Assert.Equal(expectedGuid, principalWithGuid.GetUserId<System.Guid>());
+
+        var principalWithInt = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", "42") }));
+        Assert.Equal(42, principalWithInt.GetUserId<int>());
+        Assert.Equal(42L, principalWithInt.GetUserId<long>());
+        Assert.Equal("42", principalWithInt.GetUserId<string>());
+    }
+
+    [Fact]
+    public void GetUserIdOrDefault_WithNullOrInvalid_ShouldReturnFallback()
+    {
+        ClaimsPrincipal? nullPrincipal = null;
+        Assert.Equal(99, nullPrincipal.GetUserIdOrDefault(99));
+
+        var invalidPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", "not-a-guid") }));
+        var defaultGuid = System.Guid.NewGuid();
+        Assert.Equal(defaultGuid, invalidPrincipal.GetUserIdOrDefault(defaultGuid));
+    }
 }

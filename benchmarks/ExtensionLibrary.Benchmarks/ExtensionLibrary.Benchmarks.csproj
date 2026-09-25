@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="Humanizer.Core" />
+    <PackageReference Include="morelinq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ClaimsPrincipalExtensionsLibrary\ClaimsPrincipalExtensionsLibrary.csproj" />
+    <ProjectReference Include="..\..\CollectionExtensionsLibrary\CollectionExtensionsLibrary.csproj" />
+    <ProjectReference Include="..\..\DateTimeExtensionsLibrary\DateTimeExtensionsLibrary.csproj" />
+    <ProjectReference Include="..\..\EnumExtensionsLibrary\EnumExtensionsLibrary.csproj" />
+    <ProjectReference Include="..\..\NumericExtensionLibrary\NumericExtensionLibrary.csproj" />
+    <ProjectReference Include="..\..\ObjectExtensionsLibrary\ObjectExtensionsLibrary.csproj" />
+    <ProjectReference Include="..\..\QueryableExtensionsLibrary\QueryableExtensionsLibrary.csproj" />
+    <ProjectReference Include="..\..\StringExtensionLibrary\StringExtensionLibrary.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -8,7 +8,7 @@
     <PackageTags>$(PackageTags);string;text;trim;truncate;formatting;parsing;manipulation</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 </Project>

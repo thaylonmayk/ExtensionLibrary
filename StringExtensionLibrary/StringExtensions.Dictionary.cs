@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace StringExtensionLibrary
 {
@@ -23,8 +23,54 @@ namespace StringExtensionLibrary
                 throw new ArgumentNullException(nameof(val));
             }
 
-            return JsonConvert.DeserializeObject<Dictionary<string, object>>(val)
-                   ?? new Dictionary<string, object>();
+            var dictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(val);
+            if (dictionary is null)
+            {
+                return new Dictionary<string, object>();
+            }
+
+            return NormalizeJsonElements(dictionary);
+        }
+
+        private static Dictionary<string, object> NormalizeJsonElements(Dictionary<string, object> dictionary)
+        {
+            var result = new Dictionary<string, object>(dictionary.Count);
+            foreach (var kvp in dictionary)
+            {
+                result[kvp.Key] = ConvertJsonElement(kvp.Value);
+            }
+            return result;
+        }
+
+        private static object ConvertJsonElement(object value)
+        {
+            if (value is JsonElement element)
+            {
+                switch (element.ValueKind)
+                {
+                    case JsonValueKind.String:
+                        return element.GetString();
+                    case JsonValueKind.Number:
+                        if (element.TryGetInt64(out var longVal))
+                        {
+                            return longVal;
+                        }
+                        if (element.TryGetDouble(out var doubleVal))
+                        {
+                            return doubleVal;
+                        }
+                        return element.GetRawText();
+                    case JsonValueKind.True:
+                        return true;
+                    case JsonValueKind.False:
+                        return false;
+                    case JsonValueKind.Null:
+                        return null;
+                    default:
+                        return element.ToString();
+                }
+            }
+            return value;
         }
 
         /// <summary>

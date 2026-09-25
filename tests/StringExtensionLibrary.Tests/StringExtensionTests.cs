@@ -96,4 +96,36 @@ public class StringExtensionTests
         var result = "Sunday".ToEnum<System.DayOfWeek>();
         Assert.Equal(System.DayOfWeek.Sunday, result);
     }
+
+    [Fact]
+    public void JsonToDictionary_ShouldParseValidJsonWithPrimitives()
+    {
+        string json = "{\"name\":\"Alice\",\"age\":30,\"active\":true}";
+        var dictionary = json.JsonToDictionary();
+
+        Assert.NotNull(dictionary);
+        Assert.Equal("Alice", dictionary["name"]);
+        Assert.Equal(30L, dictionary["age"]);
+        Assert.Equal(true, dictionary["active"]);
+    }
+
+    [Fact]
+    public void JsonToDictionary_WithNullOrEmpty_ShouldThrowArgumentNullException()
+    {
+        string? nullJson = null;
+        string emptyJson = string.Empty;
+
+        Assert.Throws<ArgumentNullException>(() => nullJson!.JsonToDictionary());
+        Assert.Throws<ArgumentNullException>(() => emptyJson.JsonToDictionary());
+    }
+
+    [Fact]
+    public void QueryStringToDictionary_ShouldParseUrlParameters()
+    {
+        string query = "?name=Alice&role=admin";
+        var dict = query.QueryStringToDictionary();
+
+        Assert.Equal("Alice", dict["name"]);
+        Assert.Equal("admin", dict["role"]);
+    }
 }

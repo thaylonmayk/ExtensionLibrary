@@ -1,0 +1,53 @@
+using System;
+using System.ComponentModel;
+using System.Reflection;
+using BenchmarkDotNet.Attributes;
+using EnumExtensionsLibrary;
+using ExtensionLibrary.Benchmarks.Common;
+
+namespace ExtensionLibrary.Benchmarks.Suites;
+
+/// <summary>
+/// Bateria comparativa de resolução de atributos e descrições de Enums.
+/// </summary>
+public class EnumBenchmarks : BenchmarkBase
+{
+    private BenchmarkStatus _status;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        _status = BenchmarkStatus.InProgress;
+        _ = _status.GetDescription();
+    }
+
+    [Benchmark(Baseline = true, Description = "1. Description: Reflection Direct Field Lookup")]
+    public string Description_ReflectionDirect()
+    {
+        return ResolveDescriptionViaReflection(_status);
+    }
+
+    [Benchmark(Description = "1. Description: TL.ExtensionLibrary Zero-Alloc Generic Cache")]
+    public string Description_ExtensionLibrary()
+    {
+        return _status.GetDescription();
+    }
+
+    [Benchmark(Description = "1. Description: TL.ExtensionLibrary Untyped Bounded Cache")]
+    public string Description_ExtensionLibraryUntyped()
+    {
+        return EnumExtension.GetDescription((Enum)_status);
+    }
+
+    private static string ResolveDescriptionViaReflection(BenchmarkStatus status)
+    {
+        var field = typeof(BenchmarkStatus).GetField(status.ToString());
+        if (field is null)
+        {
+            return status.ToString();
+        }
+
+        var attribute = field.GetCustomAttribute<DescriptionAttribute>();
+        return attribute is null ? status.ToString() : attribute.Description;
+    }
+}

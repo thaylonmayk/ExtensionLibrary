@@ -52,26 +52,6 @@ namespace CollectionExtensionsLibrary
         }
 
         /// <summary>
-        /// Removes all items from the list that match the specified predicate.
-        /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <param name="list">The list to remove items from.</param>
-        /// <param name="predicate">The predicate used to determine which items to remove.</param>
-        /// <returns>The number of elements removed.</returns>
-        public static int RemoveAll<T>(this List<T> list, Predicate<T> predicate) =>
-            list.RemoveAll(predicate);
-
-        /// <summary>
-        /// Finds all elements in the list that match the specified predicate.
-        /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <param name="list">The list to search.</param>
-        /// <param name="predicate">The predicate used to determine which elements to find.</param>
-        /// <returns>A list of elements that match the predicate.</returns>
-        public static List<T> FindAll<T>(this List<T> list, Predicate<T> predicate) =>
-            list.FindAll(predicate);
-
-        /// <summary>
         /// Sorts the list by the specified key selector.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
@@ -144,11 +124,21 @@ namespace CollectionExtensionsLibrary
                 throw new ArgumentOutOfRangeException(nameof(chunkSize), "O tamanho do lote deve ser maior que zero.");
             }
 
-            var chunks = new List<IList<TSource>>();
-            for (int i = 0; i < source.Count; i += chunkSize)
+            int totalCount = source.Count;
+            int totalChunks = (totalCount + chunkSize - 1) / chunkSize;
+            var chunks = new List<IList<TSource>>(totalChunks);
+
+            for (int i = 0; i < totalCount; i += chunkSize)
             {
-                chunks.Add(source.Skip(i).Take(chunkSize).ToList());
+                int count = Math.Min(chunkSize, totalCount - i);
+                var chunk = new List<TSource>(count);
+                for (int j = 0; j < count; j++)
+                {
+                    chunk.Add(source[i + j]);
+                }
+                chunks.Add(chunk);
             }
+
             return chunks;
         }
 

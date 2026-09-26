@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DateTimeExtensionsLibrary
 {
@@ -34,7 +34,10 @@ namespace DateTimeExtensionsLibrary
         /// <returns>The Unix timestamp representing the date.</returns>
         public static long ToUnixTimestamp(this DateTime date)
         {
-            return ((DateTimeOffset)date).ToUnixTimeSeconds();
+            var utcDate = date.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(date, DateTimeKind.Utc)
+                : date.ToUniversalTime();
+            return ((DateTimeOffset)utcDate).ToUnixTimeSeconds();
         }
 
         /// <summary>

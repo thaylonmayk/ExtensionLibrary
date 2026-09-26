@@ -60,4 +60,49 @@ public class DateTimeExtensionTests
         Assert.NotEmpty(chunks);
         Assert.Equal(start.Date, chunks[0].Item1.Date);
     }
+
+    [Fact]
+    public void BusinessDaysBetween_WithExplicitHolidays_ShouldExcludeHolidays()
+    {
+        var start = new DateTime(2026, 9, 7); // Monday (Independence Day holiday in Brazil)
+        var end = new DateTime(2026, 9, 11); // Friday (5 total weekdays)
+
+        var holidays = new[] { new DateTime(2026, 9, 7) };
+        var businessDays = start.BusinessDaysBetween(end, holidays);
+
+        Assert.Equal(4, businessDays);
+    }
+
+    [Fact]
+    public void BusinessDaysBetween_WithHolidayProvider_ShouldDeductWorkingHolidays()
+    {
+        var start = new DateTime(2026, 9, 1); // Tuesday
+        var end = new DateTime(2026, 9, 4);   // Friday (4 total weekdays)
+
+        var provider = new TestCorporateHolidayProvider(new[] { new DateTime(2026, 9, 2) });
+        var businessDays = start.BusinessDaysBetween(end, provider);
+
+        Assert.Equal(3, businessDays);
+    }
+
+    [Fact]
+    public void ToUnixTimestamp_WithUnspecifiedKind_ShouldNormalizeToUtcConsistently()
+    {
+        var unspecified = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        var timestamp = unspecified.ToUnixTimestamp();
+
+        Assert.Equal(0, timestamp);
+    }
+
+    private sealed class TestCorporateHolidayProvider : IHolidayProvider
+    {
+        private readonly HashSet<DateTime> _holidays;
+
+        public TestCorporateHolidayProvider(IEnumerable<DateTime> holidays)
+        {
+            _holidays = new HashSet<DateTime>(holidays);
+        }
+
+        public bool IsHoliday(DateTime date) => _holidays.Contains(date.Date);
+    }
 }

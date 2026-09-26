@@ -12,8 +12,9 @@ Por interagir diretamente com provedores LINQ (como Entity Framework Core e banc
 
 ## Decisões Arquiteturais
 
-### 1. Construção Defensiva de Filtros Dinâmicos
-- Métodos de filtragem como `Filter(property, comparison, value)` validam previamente a existência da propriedade pública na entidade através de reflexão (`BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase`). Em caso de parâmetros inválidos, a query original é preservada ou uma exceção explícita de argumento é lançada, garantindo comportamento transparente e previsível sem retornos falsos.
+### 1. Construção Defensiva e Conversão Tipada de Filtros Dinâmicos
+- Métodos de filtragem como `Filter(property, comparison, value)` validam previamente a existência da propriedade pública na entidade através de reflexão (`BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase`).
+- A conversão de valores textuais para o tipo de destino suporta explicitamente `Guid`, `DateTime`, `DateTimeOffset`, `TimeSpan`, `Enum` e tipos anuláveis (`Nullable<T>`), tratando strings vazias ou em branco de forma defensiva para evitar falhas de runtime na geração de Expression Trees.
 
 ### 2. Ordenação Dinâmica Estática (Sem Uso de DLR)
 - A ordenação dinâmica por nome de propriedade (`Order(property, ascending)`) constrói e invoca a chamada genérica `Queryable.OrderBy` / `OrderByDescending` através de Expression Trees compiladas estaticamente, dispensando o uso do Dynamic Language Runtime (`dynamic`). Isso elimina sobrecarga em tempo de execução e garante compatibilidade com compilação Native AOT.
@@ -30,4 +31,4 @@ Por interagir diretamente com provedores LINQ (como Entity Framework Core e banc
 
 - **Tradução Nativa para SQL:** Consultas dinâmicas traduzidas com total fidelidade para instruções `WHERE`, `ORDER BY` e `OFFSET/FETCH` pelo Entity Framework Core.
 - **Segurança de Execução:** Validação restrita a propriedades públicas da entidade, prevenindo acesso a membros internos ou restritos.
-- **Trade-off de Tipagem:** Os valores passados como string em filtros são convertidos para o tipo da propriedade correspondente; formatos não conversíveis exigem tratamento prévio na camada de validação de DTO da API.
+- **Ampla Cobertura de Tipos:** Suporte transparente aos tipos mais comuns de domínio e banco de dados (`Guid`, `DateTime`, `Enum`, `int?`, `decimal?`), simplificando a integração direta com query parameters de APIs HTTP.

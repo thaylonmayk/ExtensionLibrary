@@ -1,4 +1,4 @@
-﻿# 🔍 TL.QueryableExtensionsLibrary
+# 🔍 TL.QueryableExtensionsLibrary
 
 [![NuGet](https://img.shields.io/nuget/v/TL.QueryableExtensionsLibrary.svg?style=flat-square&label=TL.QueryableExtensionsLibrary)](https://www.nuget.org/packages/TL.QueryableExtensionsLibrary/)
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
@@ -24,8 +24,8 @@ dotnet add package TL.QueryableExtensionsLibrary
 
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
-| `Filter(property, value)` | `IQueryable<T>` | Filtra dinamicamente a sequência pelo nome da propriedade e valor com igualdade. |
-| `Filter(property, comparison, value)` | `IQueryable<T>` | Filtra dinamicamente aplicando operadores de comparação (`=`, `!=`, `>`, `<`, `>=`, `<=`, `Contains`, `StartsWith`, `EndsWith`). |
+| `Filter(property, value)` | `IQueryable<T>` | Filtra dinamicamente por igualdade, com conversão automática para tipos primitivos, `Guid`, `DateTime`, `Enum` e tipos anuláveis (`Nullable<T>`). |
+| `Filter(property, comparison, value)` | `IQueryable<T>` | Filtra dinamicamente com operadores relacionais e textuais (`=`, `!=`, `>`, `<`, `>=`, `<=`, `Contains`, `StartsWith`, `EndsWith`), suportando `Guid`, datas e nullables. |
 | `Order(property, ascending)` | `IQueryable<T>` | Ordena dinamicamente (`OrderBy` ou `OrderByDescending`) pelo nome da propriedade informada. |
 | `Page(index, size)` | `IQueryable<T>` | Realiza paginação baseada em índice inicial 1 (`Skip((index-1)*size).Take(size)`). |
 | `ToKeysetPagedList(keySelector, pageSize)` | `KeysetPagedList<T, TKey>` | Paginação Keyset/Seek $O(1)$ otimizada para bancos de dados sem cláusulas `OFFSET/SKIP`. |

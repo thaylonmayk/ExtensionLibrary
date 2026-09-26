@@ -1,4 +1,4 @@
-﻿# 🧩 TL.ObjectExtensionsLibrary
+# 🧩 TL.ObjectExtensionsLibrary
 
 [![NuGet](https://img.shields.io/nuget/v/TL.ObjectExtensionsLibrary.svg?style=flat-square&label=TL.ObjectExtensionsLibrary)](https://www.nuget.org/packages/TL.ObjectExtensionsLibrary/)
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
@@ -24,9 +24,9 @@ dotnet add package TL.ObjectExtensionsLibrary
 
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
-| `Clone()` | `T` | Realiza a clonagem profunda (*deep copy*) completa do grafo do objeto em memória. |
+| `Clone()` | `T` | Realiza clonagem profunda (*deep copy*) em memória com proteção nativa contra referências circulares. |
 | `ToExpando()` | `ExpandoObject` | Converte o objeto POCO em uma estrutura dinâmica expansível em tempo de execução. |
-| `Dictionary()` | `IDictionary<string, object?>` | Converte todas as propriedades públicas do objeto em um dicionário chave/valor. |
+| `ToDictionary()` / `Dictionary()` | `Dictionary<string, object?>` | Converte as propriedades públicas legíveis do objeto em dicionário, com cache de reflexão em memória. |
 | `Bytes()` | `byte[]` | Converte o objeto serializado para representação em array de bytes. |
 | `InvokeMethod(method, ...args)` | `object?` | Invoca dinamicamente um método por nome preservando a causa raiz original de exceções. |
 | `TryGetProperty(prop, out val)` | `bool` | Tenta ler o valor de uma propriedade pública sem disparar exceções caso ausente. |

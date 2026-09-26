@@ -159,22 +159,48 @@ using CollectionExtensionsLibrary;
 
 var lista = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-// Particionamento em lotes (batching)
+// Particionamento linear em lotes O(N)
 var lotes = lista.ChunkBy(3); // [1,2,3], [4,5,6], [7,8,9], [10]
 
-// Embaralhamento seguro
+// Embaralhamento uniforme
 var embaralhado = lista.Shuffle();
 ```
 
-### 5. `QueryableExtensionsLibrary`
+### 5. `DateTimeExtensionsLibrary`
+```csharp
+using DateTimeExtensionsLibrary;
+
+var inicio = new DateTime(2026, 9, 1);
+var fim = new DateTime(2026, 9, 15);
+var feriados = new[] { new DateTime(2026, 9, 7) }; // Independência do Brasil
+
+// Contagem de dias úteis desconsiderando fins de semana e feriados
+int diasUteis = inicio.BusinessDaysBetween(fim, feriados);
+```
+
+### 6. `ObjectExtensionsLibrary`
+```csharp
+using ObjectExtensionsLibrary;
+
+var pedido = new { Id = 101, Cliente = "Empresa ABC", Total = 1250.00m };
+
+// Conversão com cache de reflexão em memória
+Dictionary<string, object?> mapa = pedido.ToDictionary();
+
+// Clonagem profunda com proteção contra referências circulares
+var clone = pedido.Clone();
+```
+
+### 7. `QueryableExtensionsLibrary`
 ```csharp
 using QueryableExtensionsLibrary;
 
 IQueryable<Produto> produtos = dbContext.Produtos.AsQueryable();
 
-// Filtro e ordenação dinâmicos a partir de strings da requisição
+// Filtro dinâmico com conversão automática de Guid, DateTime e Nullables
 var resultado = produtos
-    .Filter("Nome", "contains", "Notebook")
+    .Filter("CategoriaId", "95018fc3-5a33-442b-80aa-b0638e9f241a")
+    .Filter("CriadoEm", ">=", "2026-01-01")
     .Order("Preco", ascending: false)
     .Page(index: 1, size: 20);
 ```

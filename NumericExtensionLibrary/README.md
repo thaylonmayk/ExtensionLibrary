@@ -1,4 +1,4 @@
-﻿# 🔢 TL.NumericExtensionsLibrary
+# 🔢 TL.NumericExtensionsLibrary
 
 [![NuGet](https://img.shields.io/nuget/v/TL.NumericExtensionsLibrary.svg?style=flat-square&label=TL.NumericExtensionsLibrary)](https://www.nuget.org/packages/TL.NumericExtensionsLibrary/)
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
@@ -27,9 +27,9 @@ dotnet add package TL.NumericExtensionsLibrary
 | :--- | :---: | :--- |
 | `IsPrime()` | `bool` | Valida se o número inteiro é primo. |
 | `IsEven()` / `IsOdd()` | `bool` | Determina se o número é par ou ímpar. |
-| `Factorial()` | `int` | Calcula o fatorial com validação de limites de representação. |
+| `Factorial()` | `long` | Calcula o fatorial com proteção contra overflow ($0 \le n \le 20$). |
 | `IsPerfectSquare()` | `bool` | Verifica se o número é um quadrado perfeito. |
-| `IsMultipleOf(divisor)` | `bool` | Verifica se o número é múltiplo do divisor informado. |
+| `IsMultipleOf(divisor)` | `bool` | Verifica se o número é múltiplo do divisor informado (retorna `false` para divisor zero). |
 | `DigitSum()` | `int` | Calcula a soma absoluta de todos os algarismos. |
 | `ReverseDigits()` | `int` | Inverte a ordem dos algarismos do número. |
 | `GreatestCommonDivisor(b)` | `int` | Calcula o Máximo Divisor Comum (MDC / GCD). |
@@ -43,15 +43,19 @@ dotnet add package TL.NumericExtensionsLibrary
 | `ToRadians()` | `double` | Converte valores em graus para radianos. |
 | `ToDegrees()` | `double` | Converte valores em radianos para graus. |
 | `IsEven()` / `IsOdd()` | `bool` | Validação de paridade sobre a porção inteira do número. |
+| `DigitSum()` | `int` | Calcula a soma absoluta dos algarismos do número. |
 
-### Extensões para `decimal`
+### Extensões para `decimal` e Operações Financeiras
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
 | `Percentage(percentage)` | `decimal` | Calcula percentual mantendo exatidão de ponto fixo financeiro. |
+| `CalculatePercentageOf(total)` | `decimal` | Calcula a proporção percentual que o valor representa do total informado. |
+| `SafeDivide(divisor, fallback)` | `decimal` | Divisão segura com fallback para zero ou valor configurado em caso de divisor zero. |
+| `RoundFinancial(decimals)` | `decimal` | Arredondamento contábil para o par mais próximo (`MidpointRounding.ToEven`). |
 | `WeightedAverage(numbers, weights)` | `decimal` | Calcula a média ponderada entre valores e pesos correspondentes. |
-| `DigitSum()` | `int` | Soma absoluta dos algarismos presentes no valor decimal. |
 | `ReverseDigits()` | `decimal` | Inverte os algarismos da porção numérica. |
 | `Subtract(subtrahend)` | `decimal` | Subtração fluente com suporte a encadeamento de chamadas. |
+| `IsBetween(lower, upper)` | `bool` | Avalia se o valor está dentro do intervalo fechado `[lower, upper]`. |
 
 ---
 

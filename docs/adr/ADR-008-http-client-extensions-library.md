@@ -25,10 +25,14 @@ Em ambientes de microsserviços, chamadas HTTP remotas estão sujeitas a falhas 
 ### 4. Conformidade com Cabeçalho `Retry-After` (HTTP 429)
 - Diante de respostas com status HTTP 429 (Too Many Requests), as extensões interpretam o valor do cabeçalho `Retry-After` (em segundos ou timestamp HTTP), respeitando a janela exigida pelo servidor de destino antes da próxima tentativa.
 
+### 5. Foco em Retentativas e Remoção de Circuit Breakers Locais
+- Métodos de extensão utilitários para `HttpClient` não devem reter estado compartilhado de falhas entre instâncias e threads. Por essa razão, implementações locais e simplificadas de Circuit Breaker foram removidas da biblioteca.
+- O pacote foca estritamente em retentativas idempotentes leves, clonagem de requisições e respeito ao cabeçalho `Retry-After`. Para padrões complexos de tolerância a falhas com estado compartilhado, a recomendação é a adoção de `Polly v8` ou `Microsoft.Extensions.Http.Resilience` acoplados ao `IHttpClientFactory`.
+
 ---
 
 ## Consequências e Trade-offs
 
 - **Resiliência Transparente:** Recuperação automática de instabilidades momentâneas de rede sem necessidade de código defensivo em cada chamada HTTP.
 - **Proteção de Threads:** Prevenção contra exaustão de conexões e retenção de threads de I/O em cenários de cancelamento.
-- **Trade-off de Especialização:** O pacote atende de forma leve e direta a cenários comuns de retentativa e backoff; para arquiteturas de altíssima escala com circuit breakers distribuídos com controle de malha complexo, recomenda-se combinar este pacote com o `Polly v8` (Resilience Pipelines).
+- **Simplicidade Operacional:** Ausência de efeitos colaterais por estados retidos em memória entre diferentes requisições HTTP.

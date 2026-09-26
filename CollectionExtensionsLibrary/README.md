@@ -1,4 +1,4 @@
-﻿# 📦 TL.CollectionExtensionsLibrary
+# 📦 TL.CollectionExtensionsLibrary
 
 [![NuGet](https://img.shields.io/nuget/v/TL.CollectionExtensionsLibrary.svg?style=flat-square&label=TL.CollectionExtensionsLibrary)](https://www.nuget.org/packages/TL.CollectionExtensionsLibrary/)
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
@@ -36,11 +36,11 @@ dotnet add package TL.CollectionExtensionsLibrary
 ### `IList<T>`
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
+| `ChunkBy(chunkSize)` | `List<IList<T>>` | Divide a lista em lotes com indexação direta e complexidade linear estrita $O(N)$. |
 | `AddRangeIfNotExists(items)` | `void` | Adiciona em lote apenas os itens inexistentes com verificação $O(1)$ por elemento. |
 | `Replace(oldItem, newItem)` | `bool` | Substitui a primeira ocorrência do elemento com comparação segura contra nulos. |
 | `SortBy(keySelector)` | `void` | Ordena a lista *in-place* a partir de um seletor de chave. |
-| `RemoveAll(predicate)` | `int` | Remove todos os elementos que atendem ao predicado. |
-| `FindAll(predicate)` | `List<T>` | Retorna nova lista com todos os itens compatíveis. |
+| `Move(oldIndex, newIndex)` | `void` | Reposiciona um elemento dentro da lista a partir dos índices informados. |
 
 ### `Dictionary<TKey, TValue>` & Estruturas Especializadas
 | Estrutura | Método | Descrição |

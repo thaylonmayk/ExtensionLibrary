@@ -29,6 +29,12 @@ Em serviços de faturamento, agendamento de tarefas e relatórios analíticos, c
 - **Interoperabilidade Unix Epoch (`ToUnixTimeMilliseconds` e `FromUnixTimeMilliseconds`):** Padroniza a conversão bidirecional de e para carimbos de data/hora no padrão POSIX/Unix Epoch (`1970-01-01T00:00:00Z`), essencial para contratos de telemetria, eventos e mensageria distribuída.
 - **Cálculo Determinístico de Limites Mensais (`StartOfMonth` e `EndOfMonth`):** Retorna com precisão o primeiro (`00:00:00.000`) e último instante (`23:59:59.999`) de cada mês, calculando dinamicamente dias do mês com suporte a anos bissextos e preservando estritamente o `DateTimeKind`.
 
+### 6. Suporte Extensível a Feriados Corporativos (`IHolidayProvider`)
+- Para atender a regras de negócio corporativas que exigem dedução de feriados bancários, municipais e nacionais móveis, a suíte introduz o contrato `IHolidayProvider` e sobrecargas dedicadas para `BusinessDaysBetween` e `BusinessDaysUntil`:
+  - **Null Object Pattern (`NullHolidayProvider`):** Implementação singleton padrão que trata todas as datas como dias regulares caso nenhum calendário específico seja configurado.
+  - **Sobrecargas Flexíveis:** Suporte direto a coleções enumeradas (`IEnumerable<DateTime>`), conjuntos (`HashSet<DateTime>`) ou predicados funcionais (`Func<DateTime, bool>`).
+  - **Tratamento UTC em Timestamps:** Normalização consistente de `DateTimeKind.Unspecified` para UTC em métodos de conversão de época Unix (`ToUnixTimestamp`), assegurando paridade entre servidores em fusos distintos.
+
 ---
 
 ## Consequências e Trade-offs
@@ -36,4 +42,4 @@ Em serviços de faturamento, agendamento de tarefas e relatórios analíticos, c
 - **Performance Escalável:** Resolução instantânea de prazos úteis para contratos e faturas de longa duração.
 - **Confiabilidade Temporal:** Ausência de inconsistências em ambientes de nuvem e contêineres que operam estritamente em UTC.
 - **Interoperabilidade Universal:** Integração simplificada com bancos de dados time-series, brokers de mensageria e protocolos REST/gRPC que trafegam Unix Epoch timestamps.
-- **Trade-off de Feriados:** A contagem de dias úteis padrão considera fins de semana (sábado e domingo). Para calendários de feriados municipais ou bancários móveis, a arquitetura provê extensibilidade através de calendários customizados.
+- **Flexibilidade de Feriados:** A contagem padrão opera em $O(1)$ sobre fins de semana; quando calendários com feriados corporativos são necessários, as sobrecargas com `IHolidayProvider` realizam a dedução exata dos dias não-trabalhados sem acoplamento a provedores externos de dados.

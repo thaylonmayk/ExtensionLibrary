@@ -18,7 +18,8 @@ O objetivo é fornecer uma camada utilitária confiável para regras de negócio
 ### 2. Rigor Matemático e Validações de Domínio
 - **Soma de Algarismos (`DigitSum`):** O método opera sobre a decomposição individual dos dígitos do número em valor absoluto, garantindo precisão matemática para cálculos de checksum e regras de validação.
 - **MDC e MMC (`GreatestCommonDivisor` e `GreatestCommonMultiple`):** As operações de máximo divisor comum e mínimo múltiplo comum incluem tratamento defensivo para denominadores e inputs nulos ou iguais a zero, evitando divisões por zero em tempo de execução.
-- **Fatorial com Domínio Controlado:** Operações de fatorial validam os limites representáveis do tipo inteiro ($0 \le n \le 12$ para `int`), evitando estouros aritméticos não supervisionados.
+- **Múltiplos com Divisor Seguro (`IsMultipleOf`):** Retorna `false` de forma defensiva quando o divisor for zero, evitando exceções não tratadas de divisão por zero.
+- **Fatorial com Proteção contra Overflow:** A operação de fatorial calcula valores até 64 bits (`long`) com validação estrita de limites ($0 \le n \le 20$). Valores negativos ou acima de 20 disparam `ArgumentOutOfRangeException`, eliminando estouros aritméticos em tempo de execução.
 
 ### 3. Precisão Financeira em Cálculos Decimais
 - Cálculos percentuais e médias ponderadas sobre `decimal` preservam estritamente o tipo de ponto fixo de alta precisão, evitando conversões intermediárias para ponto flutuante binário (`double`) que possam causar pequenas discrepâncias de arredondamento.

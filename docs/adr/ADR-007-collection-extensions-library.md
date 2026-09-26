@@ -13,7 +13,9 @@ Por atuar no núcleo de pipelines de dados, a previsibilidade da complexidade as
 ## Decisões Arquiteturais
 
 ### 1. Particionamento Linear $O(N)$ em `ChunkBy`
-- O método de particionamento `ChunkBy` opera em passagem única (*single-pass streaming*). Ele avança o enumerador de forma linear alocando lotes de tamanho pré-definido via `yield return`, eliminando re-enumerações repetitivas da fonte de dados e garantindo processamento contínuo em coleções volumosas.
+- O particionamento de `IEnumerable<T>` opera em passagem única (*single-pass streaming*) via `yield return`, processando sequências sem armazenar toda a fonte em memória.
+- Para coleções indexadas (`IList<T>`), o particionamento utiliza indexação direta (`source[i + j]`) com pré-alocação da capacidade das listas de lotes (`(totalCount + chunkSize - 1) / chunkSize`), eliminando o custo quadrático $O(N^2)$ decorrente de chamadas encadeadas a `Skip(i).Take(size)`.
+- Remoção de métodos utilitários redundantes (`RemoveAll` e `FindAll` em `List<T>`) para manter a API enxuta e sem duplicação de membros já presentes na BCL.
 
 ### 2. Embaralhamento Estatisticamente Uniforme (`Shuffle`)
 - A operação de embaralhamento adota o algoritmo de Fisher-Yates (Knuth Shuffle), garantindo distribuição uniforme com complexidade $O(N)$ e aproveitando instâncias thread-safe (`Random.Shared` no .NET 6+) para máxima eficiência em cenários concorrentes.

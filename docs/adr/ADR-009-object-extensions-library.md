@@ -12,11 +12,12 @@ A proposta é acelerar o desenvolvimento de DTOs, testes automatizados e manipul
 
 ## Decisões Arquiteturais
 
-### 1. Clonagem Profunda com Otimização de Buffers
-- A clonagem profunda de grafos de objetos utiliza serialização binária UTF-8 em memória (`System.Text.Json` ou `Utf8JsonWriter`), garantindo cópia completa de propriedades e referências aninhadas com geração mínima de strings intermediárias.
+### 1. Clonagem Profunda com Proteção contra Ciclos
+- A clonagem profunda de grafos de objetos utiliza serialização via `System.Text.Json` com `ReferenceHandler.IgnoreCycles`, assegurando a cópia de propriedades aninhadas e prevenindo estouros de pilha ou exceções de recursão infinita diante de referências circulares.
 
-### 2. Conversão Dinâmica para `ExpandoObject` com Cache
-- Métodos que mapeiam objetos POCO para `ExpandoObject` ou `Dictionary<string, object>` utilizam cache estático das propriedades públicas do tipo, eliminando a sobrecarga de Reflection em transformações repetidas de dados.
+### 2. Conversão para Dicionário com Cache de Reflexão (`ToDictionary`)
+- A conversão de objetos POCO em dicionários chave/valor disponibiliza a assinatura idiomática `ToDictionary()` (mantendo `Dictionary()` como compatibilidade).
+- A inspeção de propriedades públicas legíveis é armazenada em cache thread-safe (`ConcurrentDictionary<Type, PropertyInfo[]>`), reduzindo o custo de Reflection em chamadas repetidas e permitindo pré-alocar a capacidade exata do dicionário gerado.
 
 ### 3. Preservação de Causa Raiz em Invocação Dinâmica (`InvokeMethod`)
 - Em rotinas de invocação de métodos por reflexão, exceções disparadas dentro do método invocado são desembrulhadas de `TargetInvocationException` e relançadas via `ExceptionDispatchInfo.Capture(ex.InnerException).Throw()`, preservando integralmente o stack trace e a mensagem de erro original para depuração.

@@ -20,6 +20,7 @@ O objetivo é eliminar código repetitivo de reflexão nas camadas de apresenta�
 
 ### 3. Resolução Graciosa de Descrições
 - Ao solicitar a descrição de um enum que não contenha atributo anotado, o método realiza fallback automático para o nome literal do identificador (`enumValue.ToString()`), assegurando que a chamada sempre retorne um texto utilizável sem quebras de execução.
+- O mecanismo garante a resolução correta de descrições para membros enumerados com valor ordinal zero (ex.: `None = 0` ou `Initial = 0`), eliminando supressões indevidas causadas por checagens genéricas de igualdade contra `default`.
 
 ### 4. Suporte a Padrões de Atributos do Ecossistema
 - Reconhecimento automático dos atributos padrão `System.ComponentModel.DescriptionAttribute`, `System.ComponentModel.DataAnnotations.DisplayAttribute` e o atributo embutido `EnumDescriptionAttribute`.

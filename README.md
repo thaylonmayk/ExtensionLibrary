@@ -181,12 +181,28 @@ var resultado = produtos
 
 ---
 
+## 🔬 Suíte Oficial de Micro-benchmarks Científicos
+
+A solução conta com um projeto executável oficial ([`ExtensionLibrary.Benchmarks`](./benchmarks/ExtensionLibrary.Benchmarks/README.md)) baseado em **BenchmarkDotNet v0.14.0**, medindo cientificamente 26 cenários em 8 suítes com diagnósticos de memória (`[MemoryDiagnoser]`):
+
+```bash
+# Executar todos os micro-benchmarks em modo interativo
+dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks
+
+# Validação rápida de compilação e estabilidade (Job Dry)
+dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks -- --job dry --filter *
+```
+
+Consulte a [ADR 012: Suíte de Micro-benchmarks Científicos e Engenharia Zero-Allocation](./docs/adr/ADR-012-benchmarks-e-performance-zero-allocation.md) para detalhes dos trade-offs de engenharia.
+
+---
+
 ## 🏛️ Arquitetura e Decisões de Engenharia
 
 Para entender os padrões de design, trade-offs, análise de segurança e matriz de compatibilidade do ecossistema, consulte nossa documentação técnica:
 - [Visão Geral da Arquitetura & Diagramas C4](./docs/arquitetura/visao-geral.md)
 - [ADR 000: Arquitetura e Convenções](./docs/adr/ADR-000-arquitetura-e-convencoes.md)
-- [Catálogo Completo de 10 ADRs](./docs/adr/)
+- [Catálogo Completo de 13 ADRs](./docs/adr/)
 
 ---
 

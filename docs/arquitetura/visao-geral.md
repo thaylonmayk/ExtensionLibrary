@@ -65,7 +65,7 @@ C4Container
         }
 
         Container_Boundary(mods, "10 Módulos Granulares (netstandard2.0;net8.0)") {
-            Container(str, "TL.StringExtensionsLibrary", "C# / netstandard2.0;net8.0", "Manipulação de strings, casing, parsing, truncamento seguro, AppSec e regex. Depende de Newtonsoft.Json.")
+            Container(str, "TL.StringExtensionsLibrary", "C# / netstandard2.0;net8.0", "Manipulação de strings, casing, parsing, truncamento seguro, AppSec e regex. Zero dependências externas.")
             Container(num, "TL.NumericExtensionsLibrary", "C# / netstandard2.0;net8.0", "Cálculos matemáticos, números primos, fatorial, percentual, GCD/LCM e conversões de ponto flutuante.")
             Container(enm, "TL.EnumExtensionsLibrary", "C# / netstandard2.0;net8.0", "Extração de descrições com Bounded Cache, conversão em dicionários e listas tipadas a partir de enums.")
             Container(clm, "TL.ClaimsPrincipalExtensionsLibrary", "C# / netstandard2.0;net8.0", "Extração tipada de Claims, Roles, User IDs e propriedades de ClaimsPrincipal.")
@@ -79,13 +79,13 @@ C4Container
 
         Container_Boundary(tests, "Governança & Qualidade") {
             Container(archTests, "ExtensionLibrary.Architecture.Tests", "C# / net8.0 (NetArchTest)", "Validação automatizada de regras de acoplamento, pureza de domínio e isolamento de camadas")
+            Container(benchmarks, "ExtensionLibrary.Benchmarks", "C# / net8.0 (BenchmarkDotNet)", "Suíte oficial de micro-benchmarks científicos com diagnósticos de memória [MemoryDiagnoser]")
         }
     }
 
     System_Ext(newtonsoft, "Newtonsoft.Json (v13.0.3)", "Serialização/deserialização")
     System_Ext(jwt, "System.IdentityModel.Tokens.Jwt (v8.1.2)", "Manipulação e parsing de tokens JWT")
 
-    Rel(str, newtonsoft, "Usa para serialização")
     Rel(http, newtonsoft, "Usa para deserialização HTTP")
     Rel(http, jwt, "Usa para parsing de JWT")
 
@@ -115,7 +115,7 @@ C4Container
 
 | Projeto / Pacote NuGet | Runtimes Alvo (`TargetFrameworks`) | Dependências Externas | Responsabilidade Principal |
 | :--- | :--- | :---: | :--- |
-| **`TL.StringExtensionsLibrary`** | `netstandard2.0;net8.0` | `Newtonsoft.Json` (13.0.3) | Métodos utilitários de strings, regex, checagens de formato, truncamento, AppSec e parsing. |
+| **`TL.StringExtensionsLibrary`** | `netstandard2.0;net8.0` | **Zero (BCL Pura em .NET 8)** | Métodos utilitários de strings, regex, checagens de formato, truncamento, AppSec e parsing. |
 | **`TL.NumericExtensionsLibrary`** | `netstandard2.0;net8.0` | **Zero (BCL Pura)** | Operações matemáticas, percentuais, paridade, primalidade e trigonometria. |
 | **`TL.EnumExtensionsLibrary`** | `netstandard2.0;net8.0` | **Zero (BCL Pura)** | Leitura de atributos customizados com Bounded Cache, descrições e transformações. |
 | **`TL.ClaimsPrincipalExtensionsLibrary`** | `netstandard2.0;net8.0` | **Zero (BCL Pura)** | Extração simplificada e segura de Claims, Roles, IDs inteiros/longos e booleanos. |
@@ -134,11 +134,17 @@ C4Container
 | **`TL.ExtensionLibrary.Application`** | `netstandard2.0;net8.0` | Casos de Uso / DTOs / CQRS | `Object`, `ClaimsPrincipal` + Transitivo `Domain` |
 | **`TL.ExtensionLibrary.Infrastructure`** | `netstandard2.0;net8.0` | Acesso a Dados / APIs / Repositórios | `Queryable`, `HttpClient`, `Assembly` + Transitivo `Application` e `Domain` |
 
-### 3.3. Testes de Arquitetura
+### 3.3. Testes de Arquitetura & Qualidade
 
 | Projeto de Teste | Runtime | Biblioteca de Asserção | Objetivo |
 | :--- | :---: | :---: | :--- |
 | **`ExtensionLibrary.Architecture.Tests`** | `net8.0` | `NetArchTest.Rules` | Validação contínua de regras arquiteturais, impedindo acoplamento indevido entre camadas da Clean Architecture. |
+
+### 3.4. Micro-benchmarks Científicos
+
+| Projeto Executável | Runtime | Motor de Medição | Objetivo |
+| :--- | :---: | :---: | :--- |
+| **`ExtensionLibrary.Benchmarks`** | `net8.0` | `BenchmarkDotNet v0.14.0` | Medição científica de latência, throughput e memória alocada (`[MemoryDiagnoser]`) em 26 cenários em 8 suítes ([ADR-012](../adr/ADR-012-benchmarks-e-performance-zero-allocation.md)). |
 
 ---
 
@@ -147,5 +153,5 @@ C4Container
 1. **Parâmetro Estendido não Nulo:** Todo método `this T source` deve validar a não-nulidade imediata de `source` (exceto métodos expressamente desenhados para testar nulidade, como `IsNullOrEmpty()`).
 2. **Eliminação de Falhas Silenciosas:** Proibição estrita de blocos `catch` vazios que engolem exceções ou retornam coleções vazias ocultando erros de sintaxe ou de banco de dados.
 3. **Modernização com Zero-Allocation:** Migração progressiva de operações com strings e coleções para `ReadOnlySpan<char>` e `Memory<T>`, reduzindo pressão sobre o Garbage Collector.
-4. **Desacoplamento de Dependências Pesadas:** Substituição gradual do `Newtonsoft.Json` por `System.Text.Json` com Source Generators no .NET 8+.
+4. **Purificação BCL Concluída no Domínio:** `TL.StringExtensionsLibrary` e o metapacote `TL.ExtensionLibrary.Domain` utilizam `System.Text.Json` nativo do .NET 8, com total expurgo de `Newtonsoft.Json`. Dependências externas ficam estritamente isoladas na camada de Infraestrutura (`TL.HttpClientExtensionsLibrary`).
 

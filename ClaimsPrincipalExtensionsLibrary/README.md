@@ -1,4 +1,4 @@
-﻿# 🛡️ TL.ClaimsPrincipalExtensionsLibrary
+# 🛡️ TL.ClaimsPrincipalExtensionsLibrary
 
 [![NuGet](https://img.shields.io/nuget/v/TL.ClaimsPrincipalExtensionsLibrary.svg?style=flat-square&label=TL.ClaimsPrincipalExtensionsLibrary)](https://www.nuget.org/packages/TL.ClaimsPrincipalExtensionsLibrary/)
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
@@ -26,6 +26,8 @@ dotnet add package TL.ClaimsPrincipalExtensionsLibrary
 | :--- | :---: | :--- |
 | `IsAuthenticated()` | `bool` | Verifica se o principal possui identidade ativa e autenticada com segurança. |
 | `Id()` | `long` | Extrai o identificador numérico da claim `sub` (Subject ID). |
+| `GetUserId<T>()` | `T` | Extrai e converte tipado o Subject ID (`Guid`, `int`, `long`, `string`) de `sub` ou `NameIdentifier`. |
+| `GetUserIdOrDefault<T>(default)` | `T` | Extrai e converte o Subject ID tipado com fallback seguro sem lançar exceções. |
 | `ClaimSub()` | `string?` | Retorna o valor original em texto da claim `sub`. |
 | `Email()` | `string?` | Retorna o endereço de email autenticado (`email` ou `ClaimTypes.Email`). |
 | `FullName()` | `string?` | Retorna o nome completo do usuário autenticado (`name` ou `ClaimTypes.Name`). |

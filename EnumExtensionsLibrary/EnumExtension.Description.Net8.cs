@@ -16,11 +16,6 @@ namespace EnumExtensionsLibrary
         /// <returns>The description of the enum value.</returns>
         public static string GetDescription<T>(this T enumValue) where T : Enum
         {
-            if (EqualityComparer<T>.Default.Equals(enumValue, default))
-            {
-                return string.Empty;
-            }
-
             return EnumMetadataCache<T>.GetDescription(enumValue);
         }
 

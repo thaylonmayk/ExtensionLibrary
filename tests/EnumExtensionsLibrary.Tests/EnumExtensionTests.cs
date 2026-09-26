@@ -19,8 +19,24 @@ public enum OrderState
     Shipped = 3
 }
 
+public enum ZeroIndexedState
+{
+    [Description("Estado Inicial Zero")]
+    Initial = 0,
+
+    [Description("Estado Ativo")]
+    Active = 1
+}
+
 public class EnumExtensionTests
 {
+    [Fact]
+    public void GetDescription_WithZeroValueEnum_ShouldReturnDescriptionInsteadOfEmpty()
+    {
+        Assert.Equal("Estado Inicial Zero", ZeroIndexedState.Initial.GetDescription());
+        Assert.Equal("Estado Ativo", ZeroIndexedState.Active.GetDescription());
+    }
+
     [Fact]
     public void GetDescription_ShouldReturnAttributeValue()
     {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NumericExtensionLibrary
 {
@@ -49,6 +49,7 @@ namespace NumericExtensionLibrary
         /// <returns>True if the number is a multiple of the divisor; otherwise, false.</returns>
         public static bool IsMultipleOf(this int number, int divisor)
         {
+            if (divisor == 0) return false;
             return number % divisor == 0;
         }
     }

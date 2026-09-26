@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NumericExtensionLibrary;
 using Xunit;
@@ -49,6 +49,7 @@ public class NumericExtensionTests
 
         Assert.True(10.IsMultipleOf(5));
         Assert.False(10.IsMultipleOf(3));
+        Assert.False(10.IsMultipleOf(0));
     }
 
     [Fact]
@@ -57,7 +58,9 @@ public class NumericExtensionTests
         Assert.Equal(1, 0.Factorial());
         Assert.Equal(1, 1.Factorial());
         Assert.Equal(120, 5.Factorial());
-        Assert.Throws<ArgumentException>(() => (-1).Factorial());
+        Assert.Equal(2432902008176640000L, 20.Factorial());
+        Assert.Throws<ArgumentOutOfRangeException>(() => (-1).Factorial());
+        Assert.Throws<ArgumentOutOfRangeException>(() => 21.Factorial());
     }
 
     [Fact]

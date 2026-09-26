@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NumericExtensionLibrary
 {
@@ -12,8 +12,16 @@ namespace NumericExtensionLibrary
         /// <returns>The factorial of the number.</returns>
         public static long Factorial(this int number)
         {
-            if (number < 0) throw new ArgumentException("Number must be non-negative.");
-            return number == 0 ? 1 : number * Factorial(number - 1);
+            if (number < 0) throw new ArgumentOutOfRangeException(nameof(number), "Number must be non-negative.");
+            if (number > 20) throw new ArgumentOutOfRangeException(nameof(number), "Factorial input cannot exceed 20 to prevent 64-bit integer overflow.");
+
+            long result = 1;
+            for (int factor = 2; factor <= number; factor++)
+            {
+                result *= factor;
+            }
+
+            return result;
         }
     }
 }

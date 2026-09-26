@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using EnumExtensionsLibrary;
 using ExtensionLibrary.Benchmarks.Common;
@@ -37,6 +38,26 @@ public class EnumBenchmarks : BenchmarkBase
     public string Description_ExtensionLibraryUntyped()
     {
         return EnumExtension.GetDescription((Enum)_status);
+    }
+
+    [Benchmark(Description = "2. MultiThread Contention: 16 Parallel Reads on Generic Cache")]
+    public void Description_ParallelContentionGeneric()
+    {
+        Parallel.For(0, 16, static i =>
+        {
+            var desc = BenchmarkStatus.InProgress.GetDescription();
+            GC.KeepAlive(desc);
+        });
+    }
+
+    [Benchmark(Description = "2. MultiThread Contention: 16 Parallel Reads on Untyped Cache")]
+    public void Description_ParallelContentionUntyped()
+    {
+        Parallel.For(0, 16, static i =>
+        {
+            var desc = EnumExtension.GetDescription((Enum)BenchmarkStatus.InProgress);
+            GC.KeepAlive(desc);
+        });
     }
 
     private static string ResolveDescriptionViaReflection(BenchmarkStatus status)

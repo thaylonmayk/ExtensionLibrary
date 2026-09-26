@@ -65,6 +65,7 @@ dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks -- --filt
 ---
 
 ## 🏛️ Matriz Exaustiva dos 24 Cenários de Benchmark
+## 🏛️ Matriz Exaustiva dos 26 Cenários de Benchmark
 
 Abaixo, a decomposição técnica dos cenários medidos em cada um dos 8 módulos centrais:
 
@@ -109,6 +110,8 @@ Focado na eliminação do gargalo de Reflection para leitura de atributos de des
 
 1. **Leitura de Descrição (`GetDescription`)**: Compara a consulta direta por reflexão `typeof(T).GetField().GetCustomAttribute<DescriptionAttribute>()` contra o cache genérico tipado `EnumMetadataCache<T>` (zero boxing no Heap) e o cache untyped com capacidade defensiva.  
    *Ganho:* Busca em dicionário concorrente em sub-microssegundos sem alocação após primeiro warm-up.
+2. **Contenção Concorrente Multi-Thread**: Avalia 16 leituras paralelas simultâneas (`Parallel.For`) sobre o cache genérico e não-tipado (`Bounded LRU Cache`).  
+   *Ganho:* Operação sem lock com `ConcurrentDictionary` garantindo baixa contenção sob concorrência intensa.
 
 ---
 

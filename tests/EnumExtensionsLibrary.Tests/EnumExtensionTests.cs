@@ -159,6 +159,27 @@ public class EnumExtensionTests
     }
 
     [Fact]
+    public void GetDescription_Untyped_UnderHighConcurrency_ShouldBeThreadSafeAndRespectBoundedLimit()
+    {
+        EnumDescriptionCache.Clear();
+
+        Parallel.For(0, 5000, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 }, i =>
+        {
+            var enumVal = (i % 3) switch
+            {
+                0 => OrderState.Created,
+                1 => OrderState.Paid,
+                _ => (OrderState)(100 + i)
+            };
+
+            var description = EnumExtension.GetDescription((Enum)enumVal);
+            Assert.False(string.IsNullOrEmpty(description));
+        });
+
+        Assert.True(EnumDescriptionCache.Count <= EnumDescriptionCache.MaxCapacity);
+    }
+
+    [Fact]
     public void EnumDescriptionCache_Clear_ShouldResetCount()
     {
         _ = OrderState.Created.GetDescription();

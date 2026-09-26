@@ -40,14 +40,6 @@ namespace NumericExtensionLibrary
             return sum;
         }
 
-        /// <summary>
-        /// Calculates the sum of two numbers.
-        /// </summary>
-        [Obsolete("Utilize a operacao de adicao direta (a + b). Este metodo sera descontinuado na versao 1.0.0 devido a inconsistencia semantica.")]
-        public static int DigitSum(this int a, int b)
-        {
-            return a + b;
-        }
 
         /// <summary>
         /// Calculates the subtraction of a number.

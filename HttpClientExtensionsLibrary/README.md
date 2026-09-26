@@ -1,4 +1,4 @@
-﻿# 🌐 TL.HttpClientExtensionsLibrary
+# 🌐 TL.HttpClientExtensionsLibrary
 
 [![NuGet](https://img.shields.io/nuget/v/TL.HttpClientExtensionsLibrary.svg?style=flat-square&label=TL.HttpClientExtensionsLibrary)](https://www.nuget.org/packages/TL.HttpClientExtensionsLibrary/)
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
@@ -29,6 +29,8 @@ dotnet add package TL.HttpClientExtensionsLibrary
 | **Autenticação & Tokens** | `AddBearerToken(token)`, `ExtractClaims(token)` | Injeção de credenciais Bearer e inspeção de claims em tokens JWT. |
 | **Transferência de Arquivos** | `UploadFileAsync()`, `DownloadFileAsync()`, `GetFileSizeAsync()` | Upload via `multipart/form-data` e download via streams otimizados. |
 | **Diagnóstico & Logs** | `LogRequest()`, `LogResponse()`, `LogError()` | Rastreabilidade de chamadas HTTP externas sem vazamento de credenciais. |
+
+> 💡 **Nota de Arquitetura Corporativa:** As extensões de retry deste pacote são leves e voltadas para chamadas HTTP pontuais, ferramentas CLI e scripts utilitários. Para microsserviços de alta concorrência em produção corporativa que demandam Circuit Breaker distribuído com estado compartilhado entre requisições, recomenda-se a adoção de `Polly v8` ou `Microsoft.Extensions.Http.Resilience` integrado ao `IHttpClientFactory`.
 
 ---
 

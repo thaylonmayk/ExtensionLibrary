@@ -39,12 +39,37 @@ public class HttpClientExtensionTests
     }
 
     [Fact]
+    public async Task SendWithRetryAsync_WithHttpRequestMessage_ShouldCloneRequestAndSucceed()
+    {
+        var handler = new TestDelegatingHandler();
+        var client = new HttpClient(handler);
+        using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/test");
+
+        var response = await client.SendWithRetryAsync(request, retryCount: 3);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(2, handler.InvocationCount);
+    }
+
+    [Fact]
+    public async Task ExponentialBackoffRetryAsync_ShouldRetryAndSucceed()
+    {
+        var handler = new TestDelegatingHandler();
+        var client = new HttpClient(handler);
+        using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/test");
+
+        var response = await client.ExponentialBackoffRetryAsync(request, retryCount: 3, baseDelayMilliseconds: 10);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(2, handler.InvocationCount);
+    }
+
+    [Fact]
     public async Task SendWithRetryAsync_WithNullClient_ShouldThrowArgumentNullException()
     {
         HttpClient? nullClient = null;
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
             nullClient.SendWithRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, "http://localhost")));
-            
     }
 
     [Fact]

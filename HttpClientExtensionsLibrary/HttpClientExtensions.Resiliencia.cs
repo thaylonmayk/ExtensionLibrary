@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -79,7 +80,7 @@ namespace HttpClientExtensionsLibrary
                     if (response.IsSuccessStatusCode)
                         return response;
                 }
-                catch (Exception) when (i < retryCount - 1)
+                catch (HttpRequestException) when (i < retryCount - 1)
                 {
                     await Task.Delay(baseDelayMilliseconds * (int)Math.Pow(2, i), cancellationToken);
                 }
@@ -98,30 +99,39 @@ namespace HttpClientExtensionsLibrary
             client.ExponentialBackoffRetryAsync(() => CloneHttpRequestMessage(request), retryCount, baseDelayMilliseconds);
 
         /// <summary>
-        /// Sends an HTTP request with a Circuit Breaker retry policy.
+        /// Sends an HTTP request with a retry policy in case of timeout using a request factory.
         /// </summary>
         /// <param name="client">Instance of HttpClient.</param>
-        /// <param name="request">Instance of the HTTP request message.</param>
-        /// <param name="retryCount">Number of retry attempts in case of failure.</param>
-        /// <param name="circuitBreakerDuration">Duration to wait before retrying after the Circuit Breaker is opened.</param>
+        /// <param name="requestFactory">Factory producing the HTTP request message for each attempt.</param>
+        /// <param name="retryCount">Number of retry attempts in case of timeout.</param>
+        /// <param name="timeout">Timeout duration for each request attempt.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>HTTP response message.</returns>
-        public static async Task<HttpResponseMessage> CircuitBreakerRetryAsync(this HttpClient client, HttpRequestMessage request, int retryCount = 3, TimeSpan circuitBreakerDuration = default)
+        public static async Task<HttpResponseMessage> TimeoutRetryAsync(this HttpClient client, Func<HttpRequestMessage> requestFactory, int retryCount = 3, TimeSpan timeout = default, CancellationToken cancellationToken = default)
         {
-            if (circuitBreakerDuration == default)
-                circuitBreakerDuration = TimeSpan.FromSeconds(30);
+            if (client is null) throw new ArgumentNullException(nameof(client));
+            if (requestFactory is null) throw new ArgumentNullException(nameof(requestFactory));
+
+            if (timeout == default)
+                timeout = TimeSpan.FromSeconds(10);
 
             HttpResponseMessage response = null;
             for (int i = 0; i < retryCount; i++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
-                    response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                        return response;
+                    using var timeoutCts = new CancellationTokenSource(timeout);
+                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+                    using var request = requestFactory();
+
+                    response = await client.SendAsync(request, linkedCts.Token);
+                    response.EnsureSuccessStatusCode();
+                    return response;
                 }
-                catch (Exception) when (i < retryCount - 1)
+                catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && i < retryCount - 1)
                 {
-                    await Task.Delay(circuitBreakerDuration);
+                    continue;
                 }
             }
             return response;
@@ -135,27 +145,43 @@ namespace HttpClientExtensionsLibrary
         /// <param name="retryCount">Number of retry attempts in case of timeout.</param>
         /// <param name="timeout">Timeout duration for each request attempt.</param>
         /// <returns>HTTP response message.</returns>
-        public static async Task<HttpResponseMessage> TimeoutRetryAsync(this HttpClient client, HttpRequestMessage request, int retryCount = 3, TimeSpan timeout = default)
+        public static Task<HttpResponseMessage> TimeoutRetryAsync(this HttpClient client, HttpRequestMessage request, int retryCount = 3, TimeSpan timeout = default) =>
+            client.TimeoutRetryAsync(() => CloneHttpRequestMessage(request), retryCount, timeout);
+
+        /// <summary>
+        /// Sends an HTTP request and handles transient errors by retrying the request using a request factory.
+        /// </summary>
+        /// <param name="client">Instance of HttpClient.</param>
+        /// <param name="requestFactory">Factory producing the HTTP request message for each attempt.</param>
+        /// <param name="retryCount">Number of retry attempts in case of transient errors.</param>
+        /// <param name="retryDelay">Delay between retries.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>HTTP response message.</returns>
+        public static async Task<HttpResponseMessage> HandleTransientErrorsAsync(this HttpClient client, Func<HttpRequestMessage> requestFactory, int retryCount = 3, TimeSpan retryDelay = default, CancellationToken cancellationToken = default)
         {
-            if (timeout == default)
-                timeout = TimeSpan.FromSeconds(10);
+            if (client is null) throw new ArgumentNullException(nameof(client));
+            if (requestFactory is null) throw new ArgumentNullException(nameof(requestFactory));
+
+            if (retryDelay == default)
+                retryDelay = TimeSpan.FromSeconds(2);
 
             HttpResponseMessage response = null;
             for (int i = 0; i < retryCount; i++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
-                    using (var cts = new CancellationTokenSource(timeout))
-                    {
-                        response = await client.SendAsync(request, cts.Token);
-                        response.EnsureSuccessStatusCode();
+                    using var request = requestFactory();
+                    response = await client.SendAsync(request, cancellationToken);
+                    if (response.IsSuccessStatusCode)
                         return response;
-                    }
+
+                    if (!IsTransientStatusCode(response.StatusCode))
+                        return response;
                 }
-                catch (TaskCanceledException) when (i < retryCount - 1)
+                catch (HttpRequestException) when (i < retryCount - 1)
                 {
-                    if (i == retryCount - 1)
-                        throw;
+                    await Task.Delay(retryDelay, cancellationToken);
                 }
             }
             return response;
@@ -169,23 +195,38 @@ namespace HttpClientExtensionsLibrary
         /// <param name="retryCount">Number of retry attempts in case of transient errors.</param>
         /// <param name="retryDelay">Delay between retries.</param>
         /// <returns>HTTP response message.</returns>
-        public static async Task<HttpResponseMessage> HandleTransientErrorsAsync(this HttpClient client, HttpRequestMessage request, int retryCount = 3, TimeSpan retryDelay = default)
+        public static Task<HttpResponseMessage> HandleTransientErrorsAsync(this HttpClient client, HttpRequestMessage request, int retryCount = 3, TimeSpan retryDelay = default) =>
+            client.HandleTransientErrorsAsync(() => CloneHttpRequestMessage(request), retryCount, retryDelay);
+
+        /// <summary>
+        /// Sends an HTTP request and retries in case of rate limiting errors using a request factory.
+        /// </summary>
+        /// <param name="client">Instance of HttpClient.</param>
+        /// <param name="requestFactory">Factory producing the HTTP request message for each attempt.</param>
+        /// <param name="retryCount">Number of retry attempts in case of rate limiting errors.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>HTTP response message.</returns>
+        public static async Task<HttpResponseMessage> RateLimitRetryAsync(this HttpClient client, Func<HttpRequestMessage> requestFactory, int retryCount = 3, CancellationToken cancellationToken = default)
         {
-            if (retryDelay == default)
-                retryDelay = TimeSpan.FromSeconds(2);
+            if (client is null) throw new ArgumentNullException(nameof(client));
+            if (requestFactory is null) throw new ArgumentNullException(nameof(requestFactory));
 
             HttpResponseMessage response = null;
             for (int i = 0; i < retryCount; i++)
             {
-                try
+                cancellationToken.ThrowIfCancellationRequested();
+                using var request = requestFactory();
+                response = await client.SendAsync(request, cancellationToken);
+                if (response.StatusCode != (HttpStatusCode)429)
+                    return response;
+
+                if (response.Headers.TryGetValues("Retry-After", out var values))
                 {
-                    response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                        return response;
-                }
-                catch (HttpRequestException ex) when (IsTransientError(ex))
-                {
-                    await Task.Delay(retryDelay);
+                    var retryAfter = values.FirstOrDefault();
+                    if (int.TryParse(retryAfter, out int delaySeconds))
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken);
+                    }
                 }
             }
             return response;
@@ -198,30 +239,13 @@ namespace HttpClientExtensionsLibrary
         /// <param name="request">Instance of the HTTP request message.</param>
         /// <param name="retryCount">Number of retry attempts in case of rate limiting errors.</param>
         /// <returns>HTTP response message.</returns>
-        public static async Task<HttpResponseMessage> RateLimitRetryAsync(this HttpClient client, HttpRequestMessage request, int retryCount = 3)
-        {
-            HttpResponseMessage response = null;
-            for (int i = 0; i < retryCount; i++)
-            {
-                response = await client.SendAsync(request);
-                if (response.StatusCode != (HttpStatusCode)429)
-                    return response;
+        public static Task<HttpResponseMessage> RateLimitRetryAsync(this HttpClient client, HttpRequestMessage request, int retryCount = 3) =>
+            client.RateLimitRetryAsync(() => CloneHttpRequestMessage(request), retryCount);
 
-                if (response.Headers.TryGetValues("Retry-After", out var values))
-                {
-                    var retryAfter = values.First();
-                    if (int.TryParse(retryAfter, out int delaySeconds))
-                    {
-                        await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
-                    }
-                }
-            }
-            return response;
-        }
-
-        private static bool IsTransientError(HttpRequestException ex)
+        private static bool IsTransientStatusCode(HttpStatusCode status)
         {
-            return true;
+            var code = (int)status;
+            return code >= 500 || code == 408 || code == 429;
         }
 
         private static HttpRequestMessage CloneHttpRequestMessage(HttpRequestMessage request)
@@ -240,8 +264,10 @@ namespace HttpClientExtensionsLibrary
 
             if (request.Content != null)
             {
-                var ms = new System.IO.MemoryStream();
-                request.Content.CopyToAsync(ms).GetAwaiter().GetResult();
+                var ms = new MemoryStream();
+                var readTask = request.Content.ReadAsStreamAsync();
+                var stream = readTask.IsCompleted ? readTask.Result : readTask.ConfigureAwait(false).GetAwaiter().GetResult();
+                stream.CopyTo(ms);
                 ms.Position = 0;
                 clone.Content = new StreamContent(ms);
 

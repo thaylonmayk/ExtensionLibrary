@@ -74,10 +74,41 @@ public class ObjectExtensionTests
 
         Assert.Equal("Charlie", person.Name);
     }
+
+    [Fact]
+    public void ToDictionary_ShouldMapPropertiesIdiomatically()
+    {
+        var person = new Person { Name = "Alice", Age = 30 };
+        var dict = person.ToDictionary();
+
+        Assert.NotNull(dict);
+        Assert.Equal("Alice", dict["Name"]);
+        Assert.Equal(30, dict["Age"]);
+    }
+
+    [Fact]
+    public void Clone_WithCircularReference_ShouldNotThrowException()
+    {
+        var nodeA = new NodeWithCycle { Name = "Node A" };
+        var nodeB = new NodeWithCycle { Name = "Node B", Next = nodeA };
+        nodeA.Next = nodeB;
+
+        var cloned = nodeA.Clone();
+        Assert.NotNull(cloned);
+        Assert.Equal("Node A", cloned.Name);
+        Assert.NotNull(cloned.Next);
+        Assert.Equal("Node B", cloned.Next.Name);
+    }
 }
 
 public class Person
 {
     public string Name { get; set; } = string.Empty;
     public int Age { get; set; }
+}
+
+public class NodeWithCycle
+{
+    public string Name { get; set; } = string.Empty;
+    public NodeWithCycle? Next { get; set; }
 }

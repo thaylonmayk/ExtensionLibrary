@@ -64,8 +64,9 @@ dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks -- --filt
 
 ---
 
-## 🏛️ Matriz Exaustiva dos 24 Cenários de Benchmark
 ## 🏛️ Matriz Exaustiva dos 26 Cenários de Benchmark
+
+![Evidência de Execução Real no Terminal com BenchmarkDotNet](../../assets/benchmark-terminal.png)
 
 Abaixo, a decomposição técnica dos cenários medidos em cada um dos 8 módulos centrais:
 

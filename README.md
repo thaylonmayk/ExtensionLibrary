@@ -181,9 +181,13 @@ var resultado = produtos
 
 ---
 
-## 🔬 Suíte Oficial de Micro-benchmarks Científicos
+## ⚡ Desempenho & Evidências de Micro-benchmarks
 
-A solução conta com um projeto executável oficial ([`ExtensionLibrary.Benchmarks`](./benchmarks/ExtensionLibrary.Benchmarks/README.md)) baseado em **BenchmarkDotNet v0.14.0**, medindo cientificamente 26 cenários em 8 suítes com diagnósticos de memória (`[MemoryDiagnoser]`):
+A suíte **TL.ExtensionLibrary** foi concebida sob os pilares de **alta performance**, **zero-allocation** nos caminhos críticos (*hot paths*), pureza BCL em .NET 8, eliminação de reflexão/DLR e algoritmos em $O(1)$.
+
+A solução conta com **8 suítes de micro-benchmarks** (26 cenários comparativos) auditados via **BenchmarkDotNet v0.14.0**:
+
+![Evidência de Execução Real no Terminal com BenchmarkDotNet](assets/benchmark-terminal.png)
 
 ```bash
 # Executar todos os micro-benchmarks em modo interativo
@@ -193,7 +197,20 @@ dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks
 dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks -- --job dry --filter *
 ```
 
-Consulte a [ADR 012: Suíte de Micro-benchmarks Científicos e Engenharia Zero-Allocation](./docs/adr/ADR-012-benchmarks-e-performance-zero-allocation.md) para detalhes dos trade-offs de engenharia.
+### 📊 Detalhamento dos 26 Cenários de Micro-benchmarks
+
+| Módulo Avaliado | Cenários Medidos | Baseline Tradicional | Otimização TL.ExtensionLibrary | Ganho Comprovado |
+| :--- | :--- | :--- | :--- | :--- |
+| **`TL.StringExtensionsLibrary`** | 1. Truncate<br>2. SanitizeForLog<br>3. ToIntOrDefault | Substring / Concatenação / Regex | `string.Create` / Buffer Scan | **Zero-Allocation (0 B)** no Heap e proteção anti-CRLF |
+| **`TL.CollectionExtensionsLibrary`** | 1. IsNullOrEmpty<br>2. DistinctBy<br>3. Shuffle<br>4. Chunk | `!source.Any()` / `OrderBy(Guid)` | `ICollection<T>` / Fisher-Yates (`Random.Shared`) | Complexidade **$O(1)$** para contagem e **$O(N)$ linear** sem lock |
+| **`TL.QueryableExtensionsLibrary`** | 1. Keyset Seek vs Offset<br>2. Ordenação Dinâmica | `.Skip(9500).Take(20)` / DLR `dynamic` | Keyset Seek Cursor / Expression Trees tipadas | **Tempo constante $O(1)$** em páginas profundas e AOT/Trim seguro |
+| **`TL.EnumExtensionsLibrary`** | 1. Leitura de Descrição<br>2. Concorrência Multi-Thread | Reflexão (`GetCustomAttribute`) | `EnumMetadataCache<T>` (Zero-Boxing) + Bounded Cache | **Sub-microssegundos (~8 ns)** e zero contenção com 16 threads |
+| **`TL.NumericExtensionsLibrary`** | 1. Divisão Segura<br>2. Arredondamento Bancário<br>3. Percentual | `try/catch DivideByZeroException` | Guard Clause direta / `MidpointRounding.ToEven` | **Zero overhead (< 1 ns)** e precisão contábil sem viés |
+| **`TL.DateTimeExtensionsLibrary`** | 1. Dias Úteis (5 Anos)<br>2. Garantia UTC<br>3. Início do Mês | Loop diário iterativo (1.826 iterações) | Fórmula vetorial fechada (`fullWeeks * 5 + resto`) | **Redução de 1.826 iterações para ≤ 6** ($O(1)$) |
+| **`TL.ObjectExtensionsLibrary`** | 1. Clonagem Profunda<br>2. Igualdade Estrutural<br>3. Checagem de Default | `object.Equals` (Boxing) / Cópia Manual | `EqualityComparer<T>.Default` / STJ com Guard Clause | **Zero Boxing** para tipos de valor e clonagem profunda segura |
+| **`TL.ClaimsPrincipalExtensionsLibrary`** | 1. Extração `Guid`<br>2. Extração `int` | `FindFirst("sub")?.Value` + `TryParse` | `GetUserId<T>()` fortemente tipado | **Código seguro** sem exceções sob tokens JWT corrompidos |
+
+> 📖 Para a documentação aprofundada, código-fonte dos cenários, filtros CLI e trade-offs de engenharia, consulte o [Guia da Suíte de Benchmarks](./benchmarks/ExtensionLibrary.Benchmarks/README.md) e a [ADR 012: Suíte de Micro-benchmarks Científicos](./docs/adr/ADR-012-benchmarks-e-performance-zero-allocation.md).
 
 ---
 

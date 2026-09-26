@@ -114,4 +114,35 @@ public class QueryableExtensionTests
         Assert.Equal(800, descending[1].Price);
         Assert.Equal(100, descending[2].Price);
     }
+
+    [Fact]
+    public void Filter_WithGuidDateTimeAndNullable_ShouldFilterCorrectly()
+    {
+        var targetId = Guid.Parse("95018fc3-5a33-442b-80aa-b0638e9f241a");
+        var query = new List<EntityWithGuidAndDate>
+        {
+            new() { Id = targetId, Name = "Item A", CreatedAt = new DateTime(2026, 1, 1), Score = 10 },
+            new() { Id = Guid.NewGuid(), Name = "Item B", CreatedAt = new DateTime(2026, 5, 1), Score = null }
+        }.AsQueryable();
+
+        var result = query.Filter("Id", targetId.ToString()).ToList();
+        Assert.Single(result);
+        Assert.Equal("Item A", result[0].Name);
+
+        var dateResult = query.Filter("CreatedAt", ">=", "2026-03-01").ToList();
+        Assert.Single(dateResult);
+        Assert.Equal("Item B", dateResult[0].Name);
+
+        var scoreResult = query.Filter("Score", ">", "5").ToList();
+        Assert.Single(scoreResult);
+        Assert.Equal(10, scoreResult[0].Score);
+    }
+}
+
+public class EntityWithGuidAndDate
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public int? Score { get; set; }
 }

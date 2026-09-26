@@ -134,15 +134,47 @@ namespace QueryableExtensionsLibrary
         /// <returns>The value converted to the specified type.</returns>
         private static object Change(object value, Type type)
         {
-            if (type.BaseType != typeof(Enum)) return Convert.ChangeType(value, type);
+            if (value is null) return null;
+
+            var targetType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (value.GetType() == targetType)
+            {
+                return value;
+            }
 
             var stringValue = value.ToString();
+            if (string.IsNullOrWhiteSpace(stringValue))
+            {
+                return null;
+            }
 
-            if (stringValue is null) return default;
+            if (targetType == typeof(Guid))
+            {
+                return Guid.Parse(stringValue);
+            }
 
-            value = Enum.Parse(type, stringValue);
+            if (targetType.IsEnum)
+            {
+                return Enum.Parse(targetType, stringValue, ignoreCase: true);
+            }
 
-            return Convert.ChangeType(value, type);
+            if (targetType == typeof(DateTime))
+            {
+                return DateTime.Parse(stringValue, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind);
+            }
+
+            if (targetType == typeof(DateTimeOffset))
+            {
+                return DateTimeOffset.Parse(stringValue, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind);
+            }
+
+            if (targetType == typeof(TimeSpan))
+            {
+                return TimeSpan.Parse(stringValue, System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            return Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture);
         }
 
     }

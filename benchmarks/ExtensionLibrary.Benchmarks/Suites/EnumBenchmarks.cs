@@ -60,6 +60,25 @@ public class EnumBenchmarks : BenchmarkBase
         });
     }
 
+    [Benchmark(Description = "3. Parse: Enum.Parse with TryCatch (Baseline)")]
+    public BenchmarkStatus Parse_EnumParseTryCatch()
+    {
+        try
+        {
+            return (BenchmarkStatus)Enum.Parse(typeof(BenchmarkStatus), "InProgress", true);
+        }
+        catch
+        {
+            return BenchmarkStatus.Pending;
+        }
+    }
+
+    [Benchmark(Description = "3. Parse: TL.ExtensionLibrary (Safe TryParse)")]
+    public BenchmarkStatus Parse_ExtensionLibrary()
+    {
+        return EnumExtensionsLibrary.EnumExtension.ToEnum<BenchmarkStatus>("InProgress", BenchmarkStatus.Pending, true);
+    }
+
     private static string ResolveDescriptionViaReflection(BenchmarkStatus status)
     {
         var field = typeof(BenchmarkStatus).GetField(status.ToString());

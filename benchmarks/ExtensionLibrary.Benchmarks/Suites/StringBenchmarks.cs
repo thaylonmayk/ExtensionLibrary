@@ -15,7 +15,9 @@ public class StringBenchmarks : BenchmarkBase
     private string _longText = null!;
     private string _logInput = null!;
     private string _invalidNumberString = null!;
+    private string _pascalSample = null!;
     private Regex _compiledRegex = null!;
+    private Regex _snakeCaseRegex = null!;
 
     [GlobalSetup]
     public void Setup()
@@ -23,7 +25,9 @@ public class StringBenchmarks : BenchmarkBase
         _longText = "A arquitetura de software orientada a microsservicos e servicos distribuidos exige observabilidade avancada e baixo consumo de memoria.";
         _logInput = "Usuario admin realizou logon com sucesso\r\nTentativa em host nao autorizado\nSessao terminada\r";
         _invalidNumberString = "425980_INVALID_SUFFIX";
+        _pascalSample = "CustomerAccountStatementDetailsQuery";
         _compiledRegex = new Regex(@"[\r\n]", RegexOptions.Compiled);
+        _snakeCaseRegex = new Regex(@"([a-z0-9])([A-Z])", RegexOptions.Compiled);
     }
 
     [Benchmark(Baseline = true, Description = "1. Truncate: Substring Concatenation")]
@@ -73,6 +77,18 @@ public class StringBenchmarks : BenchmarkBase
     public int ParseInt_ExtensionLibrary()
     {
         return _invalidNumberString.ToIntOrDefault(0);
+    }
+
+    [Benchmark(Description = "4. ToSnakeCase: Regex Replace (Baseline)")]
+    public string SnakeCase_Regex()
+    {
+        return _snakeCaseRegex.Replace(_pascalSample, "$1_$2").ToLowerInvariant();
+    }
+
+    [Benchmark(Description = "4. ToSnakeCase: TL.ExtensionLibrary (Fast Span)")]
+    public string SnakeCase_ExtensionLibrary()
+    {
+        return StringExtensionLibrary.StringExtensions.ToSnakeCase(_pascalSample);
     }
 
     private static string TruncateViaSubstring(string text, int length)

@@ -58,6 +58,18 @@ public class DateTimeBenchmarks : BenchmarkBase
         return _startDate.StartOfMonth();
     }
 
+    [Benchmark(Description = "4. StartOfDay: Manual DateTime Instantiation (Baseline)")]
+    public DateTime StartOfDay_Manual()
+    {
+        return new DateTime(_startDate.Year, _startDate.Month, _startDate.Day, 0, 0, 0, 0, _startDate.Kind);
+    }
+
+    [Benchmark(Description = "4. StartOfDay: TL.ExtensionLibrary")]
+    public DateTime StartOfDay_ExtensionLibrary()
+    {
+        return DateTimeExtensionsLibrary.DateTimeExtensions.StartOfDay(_startDate);
+    }
+
     private static int CalculateBusinessDaysIterative(DateTime start, DateTime end)
     {
         if (start > end) return 0;

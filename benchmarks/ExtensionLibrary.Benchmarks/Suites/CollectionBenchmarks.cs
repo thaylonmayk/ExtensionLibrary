@@ -82,6 +82,20 @@ public class CollectionBenchmarks : BenchmarkBase
         return _userList.Chunk(50).ToList();
     }
 
+    [Benchmark(Description = "5. Partition: Double LINQ Where (Baseline)")]
+    public (List<BenchmarkUser> Matches, List<BenchmarkUser> NonMatches) Partition_DoubleWhere()
+    {
+        var matches = _userList.Where(u => u.Id % 2 == 0).ToList();
+        var nonMatches = _userList.Where(u => u.Id % 2 != 0).ToList();
+        return (matches, nonMatches);
+    }
+
+    [Benchmark(Description = "5. Partition: TL.ExtensionLibrary Single Pass O(N)")]
+    public (List<BenchmarkUser> Matches, List<BenchmarkUser> NonMatches) Partition_ExtensionLibrary()
+    {
+        return CollectionExtensionsLibrary.CollectionExtensions.Partition(_userList, u => u.Id % 2 == 0);
+    }
+
     private static List<BenchmarkUser> GenerateUsers(int count)
     {
         var roles = new[] { "Admin", "User", "Manager", "Auditor", "Guest" };

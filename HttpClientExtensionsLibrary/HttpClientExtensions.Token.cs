@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -77,14 +77,26 @@ namespace HttpClientExtensionsLibrary
             return tokenResponse.AccessToken;
         }
 
+        /// <summary>
+        /// Represents the deserialized OAuth token response payload.
+        /// </summary>
         public class TokenResponse
         {
+            /// <summary>
+            /// The issued access token.
+            /// </summary>
             [JsonProperty("access_token")]
             public string AccessToken { get; set; }
 
+            /// <summary>
+            /// Lifetime in seconds until token expiration.
+            /// </summary>
             [JsonProperty("expires_in")]
             public int ExpiresIn { get; set; }
 
+            /// <summary>
+            /// The optional refresh token.
+            /// </summary>
             [JsonProperty("refresh_token")]
             public string RefreshToken { get; set; }
         }

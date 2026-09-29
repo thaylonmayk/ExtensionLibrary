@@ -7,26 +7,67 @@ using System.Linq.Expressions;
 namespace QueryableExtensionsLibrary
 {
     /// <summary>
-    /// Especifica a direção de navegação para paginação baseada em keyset (seek method).
+    /// Specifies navigation direction for keyset pagination.
     /// </summary>
     public enum SeekDirection
     {
+        /// <summary>
+        /// Forward navigation (next page).
+        /// </summary>
         Forward,
+
+        /// <summary>
+        /// Backward navigation (previous page).
+        /// </summary>
         Backward
     }
 
     /// <summary>
-    /// Representa o resultado de uma consulta paginada utilizando o método Keyset (Seek Method) sobre IQueryable, garantindo navegação em tempo constante O(1).
+    /// Represents a paginated query result using keyset pagination.
     /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <typeparam name="TKey">The key type used for ordering.</typeparam>
     public class KeysetPagedList<T, TKey>
     {
+        /// <summary>
+        /// Items contained in the current page.
+        /// </summary>
         public IReadOnlyList<T> Items { get; }
+
+        /// <summary>
+        /// Maximum number of items requested for the page.
+        /// </summary>
         public int PageSize { get; }
+
+        /// <summary>
+        /// Indicates whether a subsequent page exists.
+        /// </summary>
         public bool HasNextPage { get; }
+
+        /// <summary>
+        /// Indicates whether a preceding page exists.
+        /// </summary>
         public bool HasPreviousPage { get; }
+
+        /// <summary>
+        /// The cursor key for requesting the next page.
+        /// </summary>
         public TKey? NextCursor { get; }
+
+        /// <summary>
+        /// The cursor key for requesting the previous page.
+        /// </summary>
         public TKey? PreviousCursor { get; }
 
+        /// <summary>
+        /// Initializes a new instance of KeysetPagedList.
+        /// </summary>
+        /// <param name="items">The items for the page.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="hasNextPage">True if there is a next page.</param>
+        /// <param name="hasPreviousPage">True if there is a previous page.</param>
+        /// <param name="nextCursor">The next cursor value.</param>
+        /// <param name="previousCursor">The previous cursor value.</param>
         public KeysetPagedList(
             IReadOnlyList<T> items,
             int pageSize,

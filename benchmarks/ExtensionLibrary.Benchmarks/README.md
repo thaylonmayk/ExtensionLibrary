@@ -64,7 +64,7 @@ dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks -- --filt
 
 ---
 
-## 🏛️ Matriz Exaustiva dos 26 Cenários de Benchmark
+## 🏛️ Matriz Exaustiva dos 30 Cenários de Benchmark
 
 ![Evidência de Execução Real no Terminal com BenchmarkDotNet](../../assets/benchmark-terminal.png)
 
@@ -79,6 +79,8 @@ Focado na redução de alocações efêmeras de strings no Heap e higienização
    *Ganho:* Throughput ordens de grandeza superior sem overhead de máquina de estados de regex.
 3. **Conversão Segura de Inteiro (`ToIntOrDefault`)**: Compara parsing defensivo com `try/catch` de `FormatException` contra `int.TryParse` com cultura invariante.  
    *Ganho:* Elimina stack unwinding completo do CLR em dados malformados.
+4. **Conversão de Nomenclatura (`ToSnakeCase`)**: Compara abordagem baseada em expressões regulares contra varredura em passagem única via `ReadOnlySpan<char>`.  
+   *Ganho:* Redução de até 5x na latência e menor pressão de alocação de memória.
 
 ---
 
@@ -93,6 +95,8 @@ Focado na complexidade algorítmica e eliminação de alocações de enumeradore
    *Ganho:* Complexidade linear e zero contenção de threads.
 4. **Particionamento em Lotes (`Chunk`)**: Compara rotinas iterativas aninhadas de `Skip/Take` ($O(N^2)$) contra o fatiador linear de chunks.  
    *Ganho:* Throughput proporcional ao tamanho da fonte de dados sem varreduras repetidas.
+5. **Particionamento em Dois Grupos (`Partition`)**: Compara a avaliação por duplo filtro `Where(p)` e `Where(!p)` (que itera a fonte duas vezes) contra a divisão em passagem única $O(N)$ com tupla de listas.  
+   *Ganho:* 50% menos iterações e menor sobrecarga computacional.
 
 ---
 
@@ -113,6 +117,8 @@ Focado na eliminação do gargalo de Reflection para leitura de atributos de des
    *Ganho:* Busca em dicionário concorrente em sub-microssegundos sem alocação após primeiro warm-up.
 2. **Contenção Concorrente Multi-Thread**: Avalia 16 leituras paralelas simultâneas (`Parallel.For`) sobre o cache genérico e não-tipado (`Bounded LRU Cache`).  
    *Ganho:* Operação sem lock com `ConcurrentDictionary` garantindo baixa contenção sob concorrência intensa.
+3. **Parsing Seguro de Enum (`ToEnum`)**: Compara `Enum.Parse` tradicional com captura de `ArgumentException` contra parsing seguro com fallback sem disparar exceções.  
+   *Ganho:* Zero overhead de alocação de exceção em entradas inválidas.
 
 ---
 
@@ -137,6 +143,8 @@ Focado em cálculos de calendário corporativo e normalização temporal.
    *Ganho:* Evita recálculos de offset quando a data já se encontra em UTC.
 3. **Início do Mês (`StartOfMonth`)**: Avalia a construção da data normalizada no primeiro instante (00:00:00.000) preservando o `DateTimeKind`.  
    *Ganho:* Código expressivo com alocação nula em pilha de execução.
+4. **Início do Dia (`StartOfDay`)**: Avalia a normalização dos limites diários de horário preservando `DateTimeKind` sem alocação.  
+   *Ganho:* Resolução direta com zero alocação intermediária.
 
 ---
 

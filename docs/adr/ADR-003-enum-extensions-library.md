@@ -31,6 +31,10 @@ O objetivo é eliminar código repetitivo de reflexão nas camadas de apresenta�
 - Atomicidade e thread-safety absolutos sob alta concorrência são assegurados através de double-checked locking na inserção e leitura direta lock-free via `ConcurrentDictionary.TryGetValue`.
 - Em runtimes modernos (.NET 8+), o cache genérico `EnumDescriptionCache<TEnum>` garante leitura ultrarrápida em tempo $O(1)$ com alocação estrita de `0 B` de heap para entradas já cacheadas.
 
+### 6. Parsing Seguro com Fallback e Catálogo de Descrições Tipadas
+- **Parsing com Fallback (`ToEnum` e `ToEnumOrNull`):** Permite converter cadeias de caracteres em membros enumerados com tolerância a maiúsculas/minúsculas e fallback explícito, eliminando o custo de `try/catch` de `ArgumentException` em dados corrompidos.
+- **Catálogo Global de Descrições (`GetCachedDescriptions`):** Expõe um dicionário somente-leitura (`IReadOnlyDictionary<TEnum, string>`) alimentado pelo cache estático, viabilizando exposição fluente de catálogos descritivos para APIs e contratos de frontend.
+
 ---
 
 ## Consequências e Trade-offs

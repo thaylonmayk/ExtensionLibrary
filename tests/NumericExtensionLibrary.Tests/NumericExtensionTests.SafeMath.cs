@@ -60,14 +60,20 @@ namespace NumericExtensionLibrary.Tests
             Assert.True(20.IsBetween(10, 20));
             Assert.False(9.IsBetween(10, 20));
             Assert.False(21.IsBetween(10, 20));
+        }
 
-            // Bounds inverted handling:
+        [Fact]
+        public void IsBetween_WithInvertedBounds_ShouldEvaluateInclusively()
+        {
             Assert.True(15.IsBetween(20, 10));
+            Assert.False(5.IsBetween(20, 10));
+        }
 
-            // Decimal:
+        [Fact]
+        public void IsBetween_WithDecimalAndDateTime_ShouldEvaluateInclusively()
+        {
             Assert.True(15.5m.IsBetween(10.0m, 20.0m));
 
-            // DateTime:
             var now = new DateTime(2026, 9, 21, 12, 0, 0, DateTimeKind.Utc);
             var start = new DateTime(2026, 9, 1, 0, 0, 0, DateTimeKind.Utc);
             var end = new DateTime(2026, 9, 30, 23, 59, 59, DateTimeKind.Utc);

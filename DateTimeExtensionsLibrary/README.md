@@ -38,15 +38,19 @@ dotnet add package TL.DateTimeExtensionsLibrary
 ### Calendário e Particionamento de Intervalos
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
-| `Chunks(endDate, days)` | `IEnumerable<Tuple<DateTime, DateTime>>` | Divide intervalos longos em lotes menores para consultas paginadas e jobs em lote. |
-| `StartOfMonth()` / `EndOfMonth()` | `DateTime` | Retorna o início (`00:00:00.000`) ou fim (`23:59:59.999`) do mês. |
+| `StartOfDay()` / `EndOfDay()` | `DateTime` | Retorna o primeiro (`00:00:00.000`) ou último (`23:59:59.999`) momento do dia com preservação de Kind. |
+| `StartOfMonth()` / `EndOfMonth()` | `DateTime` | Retorna o início (`00:00:00.000`) ou fim (`23:59:59.999`) do mês com preservação de Kind. |
+| `StartOfYear()` / `EndOfYear()` | `DateTime` | Retorna o primeiro instante do ano ou o encerramento em 31 de dezembro. |
 | `StartOfWeek()` / `EndOfWeek()` | `DateTime` | Retorna o primeiro ou último momento da semana. |
-| `Age()` | `int` | Calcula a idade exata com base na data atual ou especificada. |
+| `Chunks(endDate, days)` | `IEnumerable<Tuple<DateTime, DateTime>>` | Divide intervalos longos em lotes menores para consultas paginadas e jobs em lote. |
+| `CalculateAge()` / `Age()` | `int` | Calcula a idade exata com base na data de referência com ajuste bissexto. |
 | `DaysUntil(target)` | `int` | Retorna a contagem de dias corridos até a data alvo. |
 
-### Formatações Especializadas
+### Conversores e Formatações Especializadas
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
+| `ToDateOnly()` | `DateOnly` | (.NET 8+) Converte diretamente para `DateOnly` preservando ano, mês e dia. |
+| `ToTimeOnly()` | `TimeOnly` | (.NET 8+) Converte diretamente para `TimeOnly` preservando o componente horário. |
 | `ToFriendlyDateString()` | `string` | Retorna texto humanizado (ex: "hoje", "ontem", "há 3 dias"). |
 | `ToISO8601()` | `string` | Converte para a representação universal padrão ISO 8601. |
 | `ToOrdinalDateString()` | `string` | Converte para texto ordinal (ex: "1st", "2nd", "3rd"). |
@@ -65,17 +69,23 @@ public class ServicoPrazos
     {
         DateTime hoje = DateTime.UtcNow;
 
-        // 1. Cálculo de Prazos e Vencimentos Úteis
+        DateTime inicioHoje = hoje.StartOfDay();
+        DateTime fimHoje = hoje.EndOfDay();
+
+#if NET8_0_OR_GREATER
+        DateOnly apenasData = hoje.ToDateOnly();
+        TimeOnly apenasHora = hoje.ToTimeOnly();
+#endif
+
         DateTime vencimento = hoje.AddBusinessDays(10);
         int diasUteisRestantes = hoje.BusinessDaysBetween(vencimento);
 
-        // 2. Fatiamento de Consultas Massivas por Lotes de 7 dias
-        DateTime inicioAno = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        DateTime fimAno = new DateTime(2026, 12, 31, 0, 0, 0, DateTimeKind.Utc);
+        DateTime inicioAno = hoje.StartOfYear();
+        DateTime fimAno = hoje.EndOfYear();
 
         foreach (var (inicio, fim) in inicioAno.Chunks(fimAno, 7))
         {
-            Console.WriteLine($"Consultando período: {inicio:yyyy-MM-dd} até {fim:yyyy-MM-dd}");
+            Console.WriteLine($"Período: {inicio:yyyy-MM-dd} até {fim:yyyy-MM-dd}");
         }
     }
 }

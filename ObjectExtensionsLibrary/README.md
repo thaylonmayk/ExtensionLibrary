@@ -57,17 +57,11 @@ public class Exemplo
     {
         var config = new Configuracao();
 
-        // 1. Clonagem Profunda Independente
         var copia = config.Clone();
         copia.Porta = 9000;
 
-        // 2. Comparação de Propriedades
-        bool saoIguais = config.PropertiesEqual(copia); // false
-
-        // 3. Conversão para Dicionário
+        bool saoIguais = config.PropertiesEqual(copia);
         var mapa = config.Dictionary();
-
-        // 4. Transformação para ExpandoObject Dinâmico
         dynamic expando = config.ToExpando();
     }
 }

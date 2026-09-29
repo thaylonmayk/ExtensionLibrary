@@ -46,10 +46,8 @@ class Program
     {
         using var httpClient = new HttpClient();
 
-        // 1. Configuração de Bearer Token
         httpClient.AddBearerToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
 
-        // 2. Envio de Payload com Resposta Tipada
         var payload = new { Nome = "Serviço de Cobrança", Ativo = true };
         var resposta = await httpClient.SendJsonAsync<ResultadoDto>(
             "https://api.empresa.com/servicos", 
@@ -57,7 +55,6 @@ class Program
             payload
         );
 
-        // 3. Download Direto de Arquivo
         await httpClient.DownloadFileAsync(
             "https://api.empresa.com/relatorios/2026-09.pdf", 
             @"C:\temp\relatorio.pdf"

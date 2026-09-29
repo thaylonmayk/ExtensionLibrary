@@ -37,6 +37,14 @@ A governança do projeto estabelece que a biblioteca deve relatar seus limites c
 - **Pureza Binária:** A paridade funcional é entregue sem inflar a aplicação consumidora com árvores pesadas de dependência de terceiros.
 - **Escala Algorítmica:** Demonstra-se que vantagens algorítmicas ($O(1)$ Keyset vs $O(N)$ Offset) são comprovadamente determinantes em paginações profundas e grandes volumes.
 
+### 5. Cobertura de Micro-benchmarks das Extensões Utilitárias
+
+A matriz foi expandida para 30 cenários comparativos, incorporando cenários dedicados para as novas extensões:
+- `ToSnakeCase`: comparando varredura em passagem única via `ReadOnlySpan<char>` contra rotinas convencionais baseadas em `Regex`.
+- `Partition`: confrontando o particionamento em passagem única $O(N)$ contra a dupla filtragem com `.Where()`.
+- `ToEnum`: avaliando o parsing resiliente com fallback contra a captura de `ArgumentException` em `Enum.Parse`.
+- `StartOfDay`: aferindo a construção direta de limites temporais com preservação de `DateTimeKind`.
+
 ---
 
 ## Consequências e Trade-offs

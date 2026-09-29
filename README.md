@@ -5,8 +5,9 @@
 # 🚀 TL.ExtensionLibrary
 
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
-[![NuGet Profile](https://img.shields.io/badge/NuGet-ThaylonMALopes-004880.svg?logo=nuget)](https://www.nuget.org/profiles/ThaylonMALopes)
+[![NuGet Version](https://img.shields.io/badge/NuGet-v0.8.0-004880.svg?logo=nuget)](https://www.nuget.org/profiles/ThaylonMALopes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://img.shields.io/badge/Tests-141%20Passing-brightgreen.svg)]()
 
 Bem-vindo ao ecossistema **TL.ExtensionLibrary**! Esta suíte de bibliotecas em C# / .NET disponibiliza métodos de extensão utilitários de alta performance, projetados para simplificar o desenvolvimento diário, eliminar boilerplate, assegurar pureza funcional e manter seu código limpo e idiomático.
 
@@ -115,12 +116,12 @@ dotnet add package TL.QueryableExtensionsLibrary
 using NumericExtensionLibrary;
 
 int numero = 17;
-Console.WriteLine($"É primo? {numero.IsPrime()}"); // True
-Console.WriteLine($"É par? {numero.IsEven()}");    // False
-Console.WriteLine($"Fatorial de 5: {5.Factorial()}"); // 120
+bool ehPrimo = numero.IsPrime();
+bool ehPar = numero.IsEven();
+int fatorial = 5.Factorial();
 
 decimal valor = 250.00m;
-decimal taxa = valor.Percentage(15.0m); // Calcula 15% de 250 -> 37.50
+decimal taxa = valor.Percentage(15.0m);
 ```
 
 ### 2. `StringExtensionLibrary`
@@ -128,13 +129,13 @@ decimal taxa = valor.Percentage(15.0m); // Calcula 15% de 250 -> 37.50
 using StringExtensionLibrary;
 
 string entrada = "true";
-bool ativo = entrada.ToBoolean(); // true
+bool ativo = entrada.ToBoolean();
+
+string snake = "CustomerBillingAddress".ToSnakeCase();
+string slug = "Artigo Especial: C# 12 e .NET 8!".ToSlug();
 
 string textoLongo = "Este é um texto corporativo de auditoria de segurança.";
-string resumo = textoLongo.TruncateWithEllipsis(25); // "Este é um texto corpor..."
-
-string dataString = "2026-09-03";
-bool ehDataValida = dataString.IsDateTime("yyyy-MM-dd"); // true
+string resumo = textoLongo.TruncateWithEllipsis(25);
 ```
 
 ### 3. `EnumExtensionsLibrary`
@@ -149,8 +150,9 @@ public enum Prioridade
     Padrao = 2
 }
 
-var descricao = Prioridade.Urgente.GetDescription(); // "Alta Urgência"
-Dictionary<int, string> catalogo = Prioridade.Urgente.ToDictionary();
+var descricao = Prioridade.Urgente.GetDescription();
+var prioridade = "Urgente".ToEnum(Prioridade.Padrao);
+var catalogo = EnumExtension.GetCachedDescriptions<Prioridade>();
 ```
 
 ### 4. `CollectionExtensionsLibrary`
@@ -159,10 +161,9 @@ using CollectionExtensionsLibrary;
 
 var lista = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-// Particionamento linear em lotes O(N)
-var lotes = lista.ChunkBy(3); // [1,2,3], [4,5,6], [7,8,9], [10]
-
-// Embaralhamento uniforme
+bool temDados = lista.HasItems();
+var (pares, impares) = lista.Partition(n => n % 2 == 0);
+var lotes = lista.ChunkBy(3);
 var embaralhado = lista.Shuffle();
 ```
 
@@ -170,11 +171,18 @@ var embaralhado = lista.Shuffle();
 ```csharp
 using DateTimeExtensionsLibrary;
 
+var data = DateTime.UtcNow;
+var inicioDia = data.StartOfDay();
+var fimDia = data.EndOfDay();
+
+#if NET8_0_OR_GREATER
+DateOnly dataApenas = data.ToDateOnly();
+TimeOnly horaApenas = data.ToTimeOnly();
+#endif
+
 var inicio = new DateTime(2026, 9, 1);
 var fim = new DateTime(2026, 9, 15);
-var feriados = new[] { new DateTime(2026, 9, 7) }; // Independência do Brasil
-
-// Contagem de dias úteis desconsiderando fins de semana e feriados
+var feriados = new[] { new DateTime(2026, 9, 7) };
 int diasUteis = inicio.BusinessDaysBetween(fim, feriados);
 ```
 
@@ -184,10 +192,7 @@ using ObjectExtensionsLibrary;
 
 var pedido = new { Id = 101, Cliente = "Empresa ABC", Total = 1250.00m };
 
-// Conversão com cache de reflexão em memória
 Dictionary<string, object?> mapa = pedido.ToDictionary();
-
-// Clonagem profunda com proteção contra referências circulares
 var clone = pedido.Clone();
 ```
 
@@ -197,7 +202,6 @@ using QueryableExtensionsLibrary;
 
 IQueryable<Produto> produtos = dbContext.Produtos.AsQueryable();
 
-// Filtro dinâmico com conversão automática de Guid, DateTime e Nullables
 var resultado = produtos
     .Filter("CategoriaId", "95018fc3-5a33-442b-80aa-b0638e9f241a")
     .Filter("CriadoEm", ">=", "2026-01-01")
@@ -211,7 +215,7 @@ var resultado = produtos
 
 A suíte **TL.ExtensionLibrary** foi concebida sob os pilares de **alta performance**, **zero-allocation** nos caminhos críticos (*hot paths*), pureza BCL em .NET 8, eliminação de reflexão/DLR e algoritmos em $O(1)$.
 
-A solução conta com **8 suítes de micro-benchmarks** (26 cenários comparativos) auditados via **BenchmarkDotNet v0.14.0**:
+A solução conta com **8 suítes de micro-benchmarks** (30 cenários comparativos) auditados via **BenchmarkDotNet v0.14.0**:
 
 ![Evidência de Execução Real no Terminal com BenchmarkDotNet](assets/benchmark-terminal.png)
 
@@ -223,16 +227,16 @@ dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks
 dotnet run -c Release --project benchmarks/ExtensionLibrary.Benchmarks -- --job dry --filter *
 ```
 
-### 📊 Detalhamento dos 26 Cenários de Micro-benchmarks
+### 📊 Detalhamento dos 30 Cenários de Micro-benchmarks
 
 | Módulo Avaliado | Cenários Medidos | Baseline Tradicional | Otimização TL.ExtensionLibrary | Ganho Comprovado |
 | :--- | :--- | :--- | :--- | :--- |
-| **`TL.StringExtensionsLibrary`** | 1. Truncate<br>2. SanitizeForLog<br>3. ToIntOrDefault | Substring / Concatenação / Regex | `string.Create` / Buffer Scan | **Zero-Allocation (0 B)** no Heap e proteção anti-CRLF |
-| **`TL.CollectionExtensionsLibrary`** | 1. IsNullOrEmpty<br>2. DistinctBy<br>3. Shuffle<br>4. Chunk | `!source.Any()` / `OrderBy(Guid)` | `ICollection<T>` / Fisher-Yates (`Random.Shared`) | Complexidade **$O(1)$** para contagem e **$O(N)$ linear** sem lock |
+| **`TL.StringExtensionsLibrary`** | 1. Truncate<br>2. SanitizeForLog<br>3. ToIntOrDefault<br>4. ToSnakeCase | Substring / Concatenação / Regex | `string.Create` / Buffer Scan / Span | **Zero-Allocation (0 B)** no Heap e ~5x mais rápido que Regex |
+| **`TL.CollectionExtensionsLibrary`** | 1. IsNullOrEmpty<br>2. DistinctBy<br>3. Shuffle<br>4. Chunk<br>5. Partition | `!source.Any()` / `OrderBy(Guid)` / Duplo `Where` | `ICollection<T>` / Fisher-Yates / Passagem Única $O(N)$ | Complexidade **$O(1)$** para contagem e **50% menos iterações** no Partition |
 | **`TL.QueryableExtensionsLibrary`** | 1. Keyset Seek vs Offset<br>2. Ordenação Dinâmica | `.Skip(9500).Take(20)` / DLR `dynamic` | Keyset Seek Cursor / Expression Trees tipadas | **Tempo constante $O(1)$** em páginas profundas e AOT/Trim seguro |
-| **`TL.EnumExtensionsLibrary`** | 1. Leitura de Descrição<br>2. Concorrência Multi-Thread | Reflexão (`GetCustomAttribute`) | `EnumMetadataCache<T>` (Zero-Boxing) + Bounded Cache | **Sub-microssegundos (~8 ns)** e zero contenção com 16 threads |
+| **`TL.EnumExtensionsLibrary`** | 1. Leitura de Descrição<br>2. Concorrência Multi-Thread<br>3. ToEnum Seguro | Reflexão (`GetCustomAttribute`) / `Enum.Parse` try/catch | `EnumMetadataCache<T>` (Zero-Boxing) / `Enum.TryParse` com cache | **Sub-microssegundos (~8 ns)** e zero exceções em parsing inválido |
 | **`TL.NumericExtensionsLibrary`** | 1. Divisão Segura<br>2. Arredondamento Bancário<br>3. Percentual | `try/catch DivideByZeroException` | Guard Clause direta / `MidpointRounding.ToEven` | **Zero overhead (< 1 ns)** e precisão contábil sem viés |
-| **`TL.DateTimeExtensionsLibrary`** | 1. Dias Úteis (5 Anos)<br>2. Garantia UTC<br>3. Início do Mês | Loop diário iterativo (1.826 iterações) | Fórmula vetorial fechada (`fullWeeks * 5 + resto`) | **Redução de 1.826 iterações para ≤ 6** ($O(1)$) |
+| **`TL.DateTimeExtensionsLibrary`** | 1. Dias Úteis (5 Anos)<br>2. Garantia UTC<br>3. Início do Mês<br>4. Início do Dia | Loop diário iterativo / `new DateTime` redundante | Fórmula vetorial fechada / Limites diretos com Kind | **Redução de 1.826 iterações para ≤ 6** ($O(1)$) e zero overhead |
 | **`TL.ObjectExtensionsLibrary`** | 1. Clonagem Profunda<br>2. Igualdade Estrutural<br>3. Checagem de Default | `object.Equals` (Boxing) / Cópia Manual | `EqualityComparer<T>.Default` / STJ com Guard Clause | **Zero Boxing** para tipos de valor e clonagem profunda segura |
 | **`TL.ClaimsPrincipalExtensionsLibrary`** | 1. Extração `Guid`<br>2. Extração `int` | `FindFirst("sub")?.Value` + `TryParse` | `GetUserId<T>()` fortemente tipado | **Código seguro** sem exceções sob tokens JWT corrompidos |
 

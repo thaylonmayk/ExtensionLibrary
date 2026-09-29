@@ -64,11 +64,11 @@ public class DateTimeExtensionTests
     [Fact]
     public void BusinessDaysBetween_WithExplicitHolidays_ShouldExcludeHolidays()
     {
-        var start = new DateTime(2026, 9, 7); // Monday (Independence Day holiday in Brazil)
-        var end = new DateTime(2026, 9, 11); // Friday (5 total weekdays)
+        var holidayMonday = new DateTime(2026, 9, 7);
+        var endFriday = new DateTime(2026, 9, 11);
 
-        var holidays = new[] { new DateTime(2026, 9, 7) };
-        var businessDays = start.BusinessDaysBetween(end, holidays);
+        var holidays = new[] { holidayMonday };
+        var businessDays = holidayMonday.BusinessDaysBetween(endFriday, holidays);
 
         Assert.Equal(4, businessDays);
     }
@@ -76,11 +76,11 @@ public class DateTimeExtensionTests
     [Fact]
     public void BusinessDaysBetween_WithHolidayProvider_ShouldDeductWorkingHolidays()
     {
-        var start = new DateTime(2026, 9, 1); // Tuesday
-        var end = new DateTime(2026, 9, 4);   // Friday (4 total weekdays)
+        var startTuesday = new DateTime(2026, 9, 1);
+        var endFriday = new DateTime(2026, 9, 4);
 
         var provider = new TestCorporateHolidayProvider(new[] { new DateTime(2026, 9, 2) });
-        var businessDays = start.BusinessDaysBetween(end, provider);
+        var businessDays = startTuesday.BusinessDaysBetween(endFriday, provider);
 
         Assert.Equal(3, businessDays);
     }

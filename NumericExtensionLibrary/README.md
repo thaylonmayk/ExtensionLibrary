@@ -68,16 +68,14 @@ public class CalculadoraFinanceira
 {
     public void ExecutarExemplos()
     {
-        // 1. Cálculos de Teoria dos Números
         int numero = 17;
-        bool primo = numero.IsPrime(); // true
-        int somaDigitos = 12345.DigitSum(); // 15
-        int mdc = 24.GreatestCommonDivisor(36); // 12
+        bool primo = numero.IsPrime();
+        int somaDigitos = 12345.DigitSum();
+        int mdc = 24.GreatestCommonDivisor(36);
 
-        // 2. Cálculos Financeiros em Ponto Fixo
         decimal valorBase = 1500.00m;
-        decimal desconto = valorBase.Percentage(10); // 150.00m
-        decimal totalLiquido = valorBase.Subtract(desconto); // 1350.00m
+        decimal desconto = valorBase.Percentage(10);
+        decimal totalLiquido = valorBase.Subtract(desconto);
     }
 }
 ```

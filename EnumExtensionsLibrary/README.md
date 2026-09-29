@@ -1,4 +1,4 @@
-﻿# 🏷️ TL.EnumExtensionsLibrary
+# 🏷️ TL.EnumExtensionsLibrary
 
 [![NuGet](https://img.shields.io/nuget/v/TL.EnumExtensionsLibrary.svg?style=flat-square&label=TL.EnumExtensionsLibrary)](https://www.nuget.org/packages/TL.EnumExtensionsLibrary/)
 [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net8.0-blue.svg)](https://dotnet.microsoft.com/)
@@ -24,6 +24,9 @@ dotnet add package TL.EnumExtensionsLibrary
 
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
+| `ToEnum<TEnum>(defaultValue, ignoreCase)` | `TEnum` | Converte string para enum de forma segura com fallback sem disparar exceções. |
+| `ToEnumOrNull<TEnum>(ignoreCase)` | `TEnum?` | Converte string para enum anulável retornando `null` caso inválido. |
+| `GetCachedDescriptions<TEnum>()` | `IReadOnlyDictionary<TEnum, string>` | Retorna catálogo de descrições tipadas com cache estático thread-safe $O(1)$. |
 | `GetDescription()` | `string` | Retorna a descrição do atributo `[Description]` com cache estático thread-safe $O(1)$ ou o nome do enum. |
 | `GetDescription(key)` | `string` | Retorna a descrição associada a uma chave específica mapeada via `[EnumDescription(key, description)]`. |
 | `GetDescription(key, default)` | `string` | Retorna a descrição para a chave especificada ou o valor padrão caso a chave não exista. |
@@ -64,16 +67,15 @@ public class Exemplo
     {
         var status = StatusPedido.Pendente;
 
-        // 1. Obtenção de Descrição Padrão com Cache
-        string descPadrao = status.GetDescription(); // "Aguardando Pagamento"
+        var resolvido = "faturado".ToEnum(StatusPedido.Pendente);
+        var opcional = "inexistente".ToEnumOrNull<StatusPedido>();
 
-        // 2. Descrição Contextual por Chave via [EnumDescription]
-        string descGateway = status.GetDescription(2); // "Em Processamento no Gateway"
+        var catalogo = EnumExtension.GetCachedDescriptions<StatusPedido>();
 
-        // 3. Conversão para Dicionário de UI (Dropdowns / Combos)
+        string descPadrao = status.GetDescription();
+        string descGateway = status.GetDescription(2);
+
         var opcoes = EnumExtension.ToDictionary<StatusPedido>();
-
-        // 4. Busca Reversa por Descrição
         var encontrado = EnumExtension.GetEnumByDescription<StatusPedido>("Pedido Faturado");
     }
 }

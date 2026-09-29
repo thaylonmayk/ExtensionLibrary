@@ -35,11 +35,16 @@ Em serviços de faturamento, agendamento de tarefas e relatórios analíticos, c
   - **Sobrecargas Flexíveis:** Suporte direto a coleções enumeradas (`IEnumerable<DateTime>`), conjuntos (`HashSet<DateTime>`) ou predicados funcionais (`Func<DateTime, bool>`).
   - **Tratamento UTC em Timestamps:** Normalização consistente de `DateTimeKind.Unspecified` para UTC em métodos de conversão de época Unix (`ToUnixTimestamp`), assegurando paridade entre servidores em fusos distintos.
 
+### 7. Limites Diários, Anuais e Conversores DateOnly / TimeOnly
+- **Normalização de Limites Temporais:** `StartOfDay()` e `EndOfDay()` oferecem truncamento e expansão determinísticos para o primeiro (`00:00:00.000`) e último instante (`23:59:59.999`) do dia, com preservação estrita de `DateTimeKind`.
+- **Enquadramento Anual e Cálculo de Idade:** `StartOfYear()` e `EndOfYear()` agilizam queries fiscais anuais. `CalculateAge()` calcula a idade exata com tratamento correto para anos bissextos.
+- **Interoperabilidade com Tipos Modernos (.NET 8+):** `ToDateOnly()` e `ToTimeOnly()` eliminam conversões manuais e reduzem boilerplate na persistência de entidades e contratos de API.
+
 ---
 
 ## Consequências e Trade-offs
 
 - **Performance Escalável:** Resolução instantânea de prazos úteis para contratos e faturas de longa duração.
 - **Confiabilidade Temporal:** Ausência de inconsistências em ambientes de nuvem e contêineres que operam estritamente em UTC.
-- **Interoperabilidade Universal:** Integração simplificada com bancos de dados time-series, brokers de mensageria e protocolos REST/gRPC que trafegam Unix Epoch timestamps.
+- **Interoperabilidade Universal:** Integração simplificada com bancos de dados time-series, brokers de mensageria e protocolos REST/gRPC que trafegam Unix Epoch timestamps ou DateOnly.
 - **Flexibilidade de Feriados:** A contagem padrão opera em $O(1)$ sobre fins de semana; quando calendários com feriados corporativos são necessários, as sobrecargas com `IHolidayProvider` realizam a dedução exata dos dias não-trabalhados sem acoplamento a provedores externos de dados.

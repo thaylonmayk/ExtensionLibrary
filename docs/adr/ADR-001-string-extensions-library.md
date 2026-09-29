@@ -32,11 +32,16 @@ A biblioteca é compatível com múltiplos runtimes (`netstandard2.0`, `net5.0`,
 - **Mascaramento de Dados Pessoais Sensíveis:** O método `MaskEmail()` ofusca dados pessoais identificáveis preservando unicamente os caracteres limítrofes do identificador e o domínio corporativo (ex: `t*****n@empresa.com`). O método `Mask()` viabiliza ofuscação flexível de cartões, documentos e tokens com salvaguarda estrita contra exceções de limites de array (`IndexOutOfRangeException`).
 - **Truncamento e Decodificação Defensiva:** `TruncateWithEllipsis()` garante que o comprimento resultante nunca ultrapasse a cota máxima estipulada, enquanto `TryFromBase64()` elimina exceções de formato (`FormatException`) em processamento de fluxos externos.
 
+### 6. Conversões de Nomenclatura e Normalização de Slugs
+- **Transformação de Nomenclatura:** Os métodos `ToSnakeCase()` e `ToKebabCase()` convertem identificadores PascalCase e camelCase com varredura linear em passagem única, tratando adequadamente sequências de maiúsculas contíguas (ex.: `APIResponse` -> `api_response`) sem dependência de expressões regulares.
+- **Normalização de Slugs para Rotas e Identificadores:** O método `ToSlug()` sanitiza textos para URLs amigáveis através de decomposição Unicode (`NormalizationForm.FormD`) para remoção de acentos e diacríticos, substituição de pontuações por hífens e remoção de hífens duplicados.
+
 ---
 
 ## Consequências e Trade-offs
 
 - **Robustez:** Alta tolerância a variações de payloads e formatos de entrada sem risco de falhas não tratadas.
 - **Conformidade de Segurança:** Blindagem contra injeção de logs e vazamento de dados sensíveis em logs operacionais.
-- **Performance:** Eficiência de memória ao processar grandes volumes de texto através de spans.
+- **Performance:** Eficiência de memória ao processar grandes volumes de texto através de spans e algoritmos lineares sem Regex no hot-path.
 - **Compatibilidade:** O suporte a `netstandard2.0` em conjunto com APIs modernas do .NET 8+ é viabilizado de forma transparente por diretivas de compilação condicional, preservando a interoperabilidade da biblioteca.
+

@@ -34,6 +34,11 @@ Por atuar no núcleo de pipelines de dados, a previsibilidade da complexidade as
 - **Inserção Tolerante a Nulos (`AddRangeIfNotNull`):** Facilita a agregação em coleções de destino ignorando fontes nulas sem interrupção de fluxo nem exigência de verificações condicionais redundantes no chamador.
 - **Blindagem Defensiva em `ChunkBy` de Listas:** Validação estrita de limites (`chunkSize > 0`) e de fonte em coleções indexadas, prevenindo loops infinitos em chamadas com parâmetros inválidos.
 
+### 6. Particionamento em Passagem Única e Concorrência Assíncrona com Semáforo
+- **Particionamento $O(N)$ em Passagem Única (`Partition`):** Divide a sequência em uma tupla de listas `(Match, NonMatch)` avaliando o predicado exatamente uma vez por elemento, reduzindo pela metade as iterações em relação ao duplo `.Where()`.
+- **Controle de Concorrência em Loops Assíncronos (`ForEachAsync`):** Utiliza `SemaphoreSlim` para delimitar o grau máximo de paralelismo (`maxDegreeOfParallelism`) em processamento I/O assíncrono, protegendo serviços dependentes contra exaustão de sockets ou threads.
+- **Checagem Rápida $O(1)$ de Existência (`HasItems`):** Inspeciona interfaces especializadas de contagem (`ICollection<T>`, `IReadOnlyCollection<T>`) antes de acionar o enumerador, proporcionando verificação de existência com zero alocação intermediária.
+
 ---
 
 ## Consequências e Trade-offs

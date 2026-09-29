@@ -25,6 +25,9 @@ dotnet add package TL.CollectionExtensionsLibrary
 ### `IEnumerable<T>`
 | Método | Retorno | Descrição |
 | :--- | :---: | :--- |
+| `Partition(predicate)` | `(List<T>, List<T>)` | Divide a sequência em elementos correspondentes e não correspondentes em passagem única $O(N)$. |
+| `ForEachAsync(body, maxDegreeOfParallelism, cancellationToken)` | `Task` | Executa ação assíncrona sobre cada item controlando concorrência máxima com semáforo. |
+| `HasItems()` | `bool` | Checagem $O(1)$ de presença de itens sem alocação desnecessária de enumeradores. |
 | `ChunkBy(chunkSize)` | `IEnumerable<List<T>>` | Divide a sequência em lotes com passagem linear única $O(N)$ em streaming. |
 | `Shuffle()` | `IEnumerable<T>` | Embaralha os elementos com algoritmo Fisher-Yates e distribuição estatisticamente uniforme. |
 | `WhereIf(condition, predicate)` | `IEnumerable<T>` | Aplica o filtro de forma condicional apenas se `condition` for verdadeira. |
@@ -57,23 +60,29 @@ dotnet add package TL.CollectionExtensionsLibrary
 ```csharp
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CollectionExtensionsLibrary;
 
 public class LoteProcessador
 {
-    public void ProcessarEmLotes(IEnumerable<string> itens)
+    public async Task ProcessarEmLotesAsync(IEnumerable<string> itens)
     {
-        // 1. Particionamento linear de alta performance em lotes de 100
-        foreach (var lote in itens.ChunkBy(100))
+        if (!itens.HasItems()) return;
+
+        var (urgentes, normais) = itens.Partition(x => x.StartsWith("URGENTE_"));
+
+        await urgentes.ForEachAsync(async item =>
+        {
+            await ProcessarItemAsync(item);
+        }, maxDegreeOfParallelism: 4);
+
+        foreach (var lote in normais.ChunkBy(100))
         {
             EnviarParaFila(lote);
         }
-
-        // 2. Filtro condicional fluente sem quebrar a cadeia LINQ
-        bool apenasAtivos = true;
-        var filtrados = itens.WhereIf(apenasAtivos, item => item.StartsWith("ATIVO_"));
     }
 
+    private Task ProcessarItemAsync(string item) => Task.CompletedTask;
     private void EnviarParaFila(List<string> lote) => Console.WriteLine($"Lote de {lote.Count} enviado.");
 }
 ```

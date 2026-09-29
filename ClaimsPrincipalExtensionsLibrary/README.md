@@ -50,18 +50,15 @@ public class PedidoController
     {
         var user = context.User;
 
-        // 1. Verificação de Autenticação Segura
         if (!user.IsAuthenticated())
         {
             throw new UnauthorizedAccessException("Usuário não autenticado.");
         }
 
-        // 2. Extração Simplificada de Dados de Identidade
         long usuarioId = user.Id();
         string email = user.Email() ?? "desconhecido@empresa.com";
         string nome = user.FullName() ?? "Usuário";
 
-        // 3. Validação de Papel/Role
         if (user.HasRole("Administrador"))
         {
             Console.WriteLine($"Acesso prioritário liberado para {nome} (ID: {usuarioId})");

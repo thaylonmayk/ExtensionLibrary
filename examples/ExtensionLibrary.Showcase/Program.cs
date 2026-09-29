@@ -38,14 +38,14 @@ public class OrderModel
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         DemonstrateKeysetPagination();
         DemonstrateClaimsPrincipal();
         DemonstrateDateTimeExtensions();
         DemonstrateStringExtensions();
         DemonstrateNumericExtensions();
-        DemonstrateCollectionExtensions();
+        await DemonstrateCollectionExtensionsAsync();
         DemonstrateEnumExtensions();
         DemonstrateObjectExtensions();
     }
@@ -90,8 +90,12 @@ public class Program
         int businessDays = startDate.BusinessDaysBetween(targetDate);
         var utcDate = startDate.EnsureUtc();
         long epoch = utcDate.ToUnixTimeMilliseconds();
+        var dayStart = startDate.StartOfDay();
+        var dayEnd = startDate.EndOfDay();
+        var dateOnly = startDate.ToDateOnly();
 
         Console.WriteLine($"[DateTime] Inicio: {startDate:yyyy-MM-dd} | +5 dias uteis: {targetDate:yyyy-MM-dd} | Total dias uteis: {businessDays} | Epoch ms: {epoch}");
+        Console.WriteLine($"[DateTime] StartOfDay: {dayStart:yyyy-MM-dd HH:mm:ss.fff} | EndOfDay: {dayEnd:yyyy-MM-dd HH:mm:ss.fff} | DateOnly: {dateOnly}");
     }
 
     private static void DemonstrateStringExtensions()
@@ -101,8 +105,12 @@ public class Program
         string sanitized = "log\r\ninjection".SanitizeForLog();
         string maskedEmail = "usuario.corporativo@empresa.com".MaskEmail();
         var jsonDict = "{\"servico\":\"api\",\"timeout\":30}".JsonToDictionary();
+        string snakeCase = "CustomerBillingAddress".ToSnakeCase();
+        string kebabCase = "OrderItemDetail".ToKebabCase();
+        string slug = "C# 12 e .NET 8 em Producao!".ToSlug();
 
         Console.WriteLine($"[String] Truncate: '{truncated}' | Sanitize: '{sanitized}' | MaskEmail: '{maskedEmail}' | JsonDict: servico={jsonDict["servico"]}, timeout={jsonDict["timeout"]}");
+        Console.WriteLine($"[String] SnakeCase: '{snakeCase}' | KebabCase: '{kebabCase}' | Slug: '{slug}'");
     }
 
     private static void DemonstrateNumericExtensions()
@@ -118,14 +126,23 @@ public class Program
         Console.WriteLine($"[Numeric] SafeDivide(100/0): {safeDivision} | RoundFinancial(12.345): {rounded} | 25 em 200: {percentage}% | 15 entre [10,20]: {between} | DigitSum(9876): {digitSum}");
     }
 
-    private static void DemonstrateCollectionExtensions()
+    private static async Task DemonstrateCollectionExtensionsAsync()
     {
-        var numbers = new List<int> { 1, 2, 2, 3, 4, 4, 5 };
+        var numbers = new List<int> { 1, 2, 2, 3, 4, 4, 5, 6, 7, 8 };
         bool isEmpty = numbers.IsNullOrEmpty();
         var distinct = numbers.DistinctBy(x => x).ToList();
         var shuffled = distinct.Shuffle().ToList();
+        var (evens, odds) = numbers.Partition(x => x % 2 == 0);
+
+        int processedCount = 0;
+        await numbers.ForEachAsync((item, ct) =>
+        {
+            Interlocked.Increment(ref processedCount);
+            return Task.CompletedTask;
+        }, maxDegreeOfParallelism: 2);
 
         Console.WriteLine($"[Collection] IsNullOrEmpty: {isEmpty} | DistinctCount: {distinct.Count} | Shuffled: [{string.Join(", ", shuffled)}]");
+        Console.WriteLine($"[Collection] Partition -> Pares: [{string.Join(", ", evens)}] | Impares: [{string.Join(", ", odds)}] | ForEachAsync: {processedCount} itens");
     }
 
     private static void DemonstrateEnumExtensions()
@@ -133,8 +150,11 @@ public class Program
         var priority = OrderPriority.High;
         string defaultDescription = priority.GetDescription();
         string contextualDescription = priority.GetDescription(3);
+        var parsed = "Standard".ToEnum(OrderPriority.Low);
+        var dictionary = EnumExtension.ToDictionary<OrderPriority>();
 
         Console.WriteLine($"[Enum] Descricao: '{defaultDescription}' | Contextual: '{contextualDescription}'");
+        Console.WriteLine($"[Enum] ParsedToEnum: '{parsed}' | DictionaryCount: {dictionary.Count}");
     }
 
     private static void DemonstrateObjectExtensions()
